@@ -1,0 +1,120 @@
+/* ==========================================================================
+   Theme: Nord  (https://www.nordtheme.com)
+   --------------------------------------------------------------------------
+   This file holds COLOR and FONT tokens only. No layout lives here; all
+   layout/components are in css/style.css and reference these tokens via
+   var(--token). style.css never uses raw color literals.
+
+   How to make a new theme:
+     1. Copy this file, e.g. css/themes/my-theme.css.
+     2. Change the token VALUES below (keep every token NAME - style.css and
+        js/main.js depend on them). Provide both the dark block and the light
+        block (the light block appears twice: once for data-theme="light",
+        once for the prefers-color-scheme fallback - keep them identical).
+     3. In index.html, swap the <link href="css/themes/nord.css"> for your
+        file. Nothing else needs to change.
+     4. Check text tokens reach 4.5:1 contrast on --bg and --surface.
+
+   Theme selection:
+     :root / [data-theme="dark"]   -> dark (default)
+     [data-theme="light"]          -> light
+     no data-theme + OS light      -> light (fallback if JS is unavailable)
+   ========================================================================== */
+
+/* --- Raw palette + non-color tokens (theme-independent) ------------------ */
+:root {
+  /* Polar Night */
+  --nord0: #2E3440;
+  --nord1: #3B4252;
+  --nord2: #434C5E;
+  --nord3: #4C566A;
+  /* Snow Storm */
+  --nord4: #D8DEE9;
+  --nord5: #E5E9F0;
+  --nord6: #ECEFF4;
+  /* Frost */
+  --nord7: #8FBCBB;
+  --nord8: #88C0D0;
+  --nord9: #81A1C1;
+  --nord10: #5E81AC;
+  /* Aurora */
+  --nord11: #BF616A;
+  --nord12: #D08770;
+  --nord13: #EBCB8B;
+  --nord14: #A3BE8C;
+  --nord15: #B48EAD;
+
+  /* Shape + fonts */
+  --radius: 16px;
+  --radius-sm: 10px;
+  --maxw: 1100px;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-script: 'Pacifico', cursive;
+}
+
+/* --- Dark (default) ------------------------------------------------------- */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #2E3440;               /* nord0 */
+  --bg-alt: #3B4252;           /* nord1 */
+  --surface: #3B4252;          /* nord1 */
+  --surface-border: rgba(216, 222, 233, 0.10);
+  --text: #ECEFF4;             /* nord6 */
+  --text-dim: #D8DEE9;         /* nord4 */
+  --text-faint: #A5AFC0;       /* between nord3/nord4; 4.55:1 on surface */
+  --accent: #88C0D0;           /* nord8 */
+  --accent-2: #81A1C1;         /* nord9 - decorative/hover bg, not small text on surface */
+  --accent-contrast: #2E3440;  /* text on accent buttons */
+  --success: #A3BE8C;          /* nord14 */
+  --focus-ring: #88C0D0;
+  --glow-1: rgba(136, 192, 208, 0.14);
+  --glow-2: rgba(180, 142, 173, 0.10);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --nav-bg: rgba(46, 52, 64, 0.75);
+}
+
+/* --- Light ---------------------------------------------------------------- */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #ECEFF4;               /* nord6 */
+  --bg-alt: #E5E9F0;           /* nord5 */
+  --surface: #E5E9F0;          /* nord5 */
+  --surface-border: rgba(46, 52, 64, 0.12);
+  --text: #2E3440;             /* nord0 */
+  --text-dim: #3B4252;         /* nord1 */
+  --text-faint: #4C566A;       /* nord3 */
+  --accent: #4C6A92;           /* darkened nord10; 4.56:1 on surface */
+  --accent-2: #3E5778;         /* darker still, hover state */
+  --accent-contrast: #ECEFF4;
+  --success: #4A7337;          /* darkened nord14 */
+  --focus-ring: #5E81AC;       /* nord10 */
+  --glow-1: rgba(94, 129, 172, 0.10);
+  --glow-2: rgba(180, 142, 173, 0.08);
+  --shadow: 0 10px 30px rgba(46, 52, 64, 0.10);
+  --nav-bg: rgba(236, 239, 244, 0.80);
+}
+
+/* --- Light fallback: OS prefers light and no explicit choice -------------- */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #ECEFF4;
+    --bg-alt: #E5E9F0;
+    --surface: #E5E9F0;
+    --surface-border: rgba(46, 52, 64, 0.12);
+    --text: #2E3440;
+    --text-dim: #3B4252;
+    --text-faint: #4C566A;
+    --accent: #4C6A92;
+    --accent-2: #3E5778;
+    --accent-contrast: #ECEFF4;
+    --success: #4A7337;
+    --focus-ring: #5E81AC;
+    --glow-1: rgba(94, 129, 172, 0.10);
+    --glow-2: rgba(180, 142, 173, 0.08);
+    --shadow: 0 10px 30px rgba(46, 52, 64, 0.10);
+    --nav-bg: rgba(236, 239, 244, 0.80);
+  }
+}

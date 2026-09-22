@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- TBD: replace "Your Name" with your real name -->
+  <title>Your Name — Portfolio</title>
+  <!-- TBD: write a real one-sentence description -->
+  <meta name="description" content="TBD: Portfolio of Your Name, software developer based in Vienna, Austria.">
+  <meta name="theme-color" content="#2E3440">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+  <!-- Anti-flash: set the theme before any stylesheet loads -->
+  <script>
+    (function () {
+      var theme = null;
+      try { theme = localStorage.getItem('theme'); } catch (e) {}
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Pacifico&amp;display=swap">
+
+  <!-- Theme: to re-theme, copy css/themes/nord.css and point this link at the copy -->
+  <link rel="stylesheet" href="css/themes/nord.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header class="site-header" id="siteHeader">
+    <nav class="nav" aria-label="Primary">
+      <!-- TBD: initials -->
+      <a href="#home" class="logo" aria-label="Home"><span class="logo-mark">YN</span></a>
+
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#activity">Activity</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button type="button" class="icon-btn" id="themeToggle" aria-label="Switch to light theme">
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+        </button>
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <ul class="nav-links-mobile" id="mobileNav">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#activity">Activity</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </header>
+
+  <main id="main">
+    <!-- ============ Hero ============ -->
+    <section id="home" class="hero">
+      <!-- TBD: initials (photo can replace this later) -->
+      <div class="avatar" aria-hidden="true">YN</div>
+      <span class="status-pill"><span class="dot"></span>Open to collaboration</span>
+      <!-- TBD: your name -->
+      <h1 class="hero-title">Hi. I'm <span class="script">Your Name</span></h1>
+      <p class="hero-sub">TBD one-line tagline.</p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">View my projects <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+      <!-- TBD: your city -->
+      <span class="location-chip">Vienna, Austria</span>
+    </section>
+
+    <!-- ============ At a glance (bento) ============ -->
+    <section id="glance" class="section bento" aria-label="At a glance">
+      <div class="section-inner">
+        <div class="bento-grid">
+          <div class="bento-card bento-location">
+            <span class="bento-label">Base</span>
+            <div class="placeholder">Globe centered on Vienna — M2</div>
+          </div>
+          <div class="bento-card bento-clock">
+            <span class="bento-label">Local time</span>
+            <p class="bento-clock-time" id="localClock">--:--:--</p>
+            <!-- TBD: your city -->
+            <span class="bento-sub">Vienna, Austria</span>
+          </div>
+          <div class="bento-card bento-connect">
+            <span class="bento-label">Connect</span>
+            <!-- TBD: real profile links -->
+            <ul class="connect-links">
+              <li><a href="https://github.com/aegisssc" target="_blank" rel="noopener">GitHub</a></li>
+              <li><a href="#">LinkedIn (TBD)</a></li>
+              <li><a href="#">Email (TBD)</a></li>
+            </ul>
+          </div>
+          <div class="bento-card bento-tools">
+            <span class="bento-label">Tools</span>
+            <div class="placeholder">Tool logos — M2</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ About ============ -->
+    <section id="about" class="section about">
+      <div class="section-inner">
+        <h2 class="section-label">About</h2>
+        <h3 class="section-title">A bit about me</h3>
+        <div class="placeholder">Short bio and background — M3</div>
+      </div>
+    </section>
+
+    <!-- ============ Projects ============ -->
+    <section id="projects" class="section projects">
+      <div class="section-inner">
+        <h2 class="section-label">Projects</h2>
+        <h3 class="section-title">Things I've built</h3>
+        <div id="projectsGrid" class="projects-grid">
+          <div class="placeholder">Hand-picked project cards — M3</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Skills ============ -->
+    <section id="skills" class="section skills">
+      <div class="section-inner">
+        <h2 class="section-label">Skills</h2>
+        <h3 class="section-title">What I build with</h3>
+        <div class="placeholder">Languages, frameworks and tools — M3</div>
+      </div>
+    </section>
+
+    <!-- ============ Experience ============ -->
+    <section id="experience" class="section experience">
+      <div class="section-inner">
+        <h2 class="section-label">Experience</h2>
+        <h3 class="section-title">Where I've worked</h3>
+        <div class="placeholder">Work history timeline (optional) — M3</div>
+      </div>
+    </section>
+
+    <!-- ============ Education ============ -->
+    <section id="education" class="section education">
+      <div class="section-inner">
+        <h2 class="section-label">Education</h2>
+        <h3 class="section-title">Where I've studied</h3>
+        <div class="placeholder">Schools and degrees (optional) — M3</div>
+      </div>
+    </section>
+
+    <!-- ============ Activity ============ -->
+    <section id="activity" class="section activity">
+      <div class="section-inner">
+        <h2 class="section-label">Activity</h2>
+        <h3 class="section-title">GitHub contributions</h3>
+        <div class="placeholder">GitHub contribution graph — M3</div>
+      </div>
+    </section>
+
+    <!-- ============ Contact ============ -->
+    <section id="contact" class="section contact">
+      <div class="section-inner">
+        <h2 class="section-label">Contact</h2>
+        <h3 class="section-title section-title-big">Let's talk.</h3>
+        <p class="contact-text">TBD: a sentence inviting people to get in touch.</p>
+        <!-- TBD: real email address -->
+        <a href="mailto:TBD@example.com" class="btn btn-primary">Say hello <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-mark">YN</span>
+        <p>TBD short bio.</p>
+      </div>
+      <div class="footer-col">
+        <h2 class="footer-heading">Navigate</h2>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#activity">Activity</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2 class="footer-heading">Contact</h2>
+        <!-- TBD: real links -->
+        <ul>
+          <li><a href="mailto:TBD@example.com">Email (TBD)</a></li>
+          <li><a href="https://github.com/aegisssc" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="#">LinkedIn (TBD)</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- TBD: your name -->
+    <div class="footer-bottom">© <span id="year">2026</span> Your Name</div>
+  </footer>
+</body>
+</html>
