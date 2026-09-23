@@ -223,8 +223,9 @@ function drawWeb(ctx, web, colors, phi, theta, zoom, now, reducedMotion) {
   // Nodes: on the surface, so they fade out as they reach the rim.
   // Each drawn node is recorded (canvas px) for hover hit-testing.
   const hits = [];
-  // ring: draw the node as an open circle instead of a filled dot, so the
-  // highlighted city is told apart by shape as well as colour.
+  // ring: draw the node as an open circle instead of a filled dot. Home wears
+  // the ring, so the place the whole web radiates from is told apart by shape
+  // as well as colour.
   function node(vec, radius, fill, name, ring) {
     const p = toScreen(vec, phi, theta);
     const a = clamp01(p[2] / 0.12);
@@ -271,12 +272,12 @@ function drawWeb(ctx, web, colors, phi, theta, zoom, now, reducedMotion) {
         return g;
       }
       : colors.node;
-    node(n.vec, radius, fill, n.name, n.mark);
+    node(n.vec, radius, fill, n.name, false);   // anchors are filled dots
   });
 
-  // Home: --globe-hub, with a halo that pulses (static under reduced motion).
+  // Home: --globe-hub as a ring, with a halo that pulses (static under reduced motion).
   const homeR = nodeR * 1.5;
-  const at = node(web.home, homeR, colors.hub, web.homeName);
+  const at = node(web.home, homeR, colors.hub, web.homeName, true);
   if (at) {
     const t = reducedMotion ? 0.5 : (now % 2000) / 2000;
     ctx.globalAlpha = at[2] * (1 - t) * 0.8;

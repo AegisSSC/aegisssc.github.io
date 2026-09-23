@@ -11,7 +11,8 @@ window.SITE = {
   location: [48.2082, 16.3738], // [lat, lon] globe center + home node (red)
   // Other anchor points of the globe web. Each is linked to home by a spoke,
   // and neighbors (by direction from home) are linked by the web's threads.
-  // style: 'highlight' = larger ring node in --globe-mark-*; omit for a plain accent dot.
+  // style: 'highlight' = larger dot in --globe-mark-* (home wears the ring);
+  //        omit for a plain accent dot.
   // size: optional node size multiplier (1 = normal).
   anchors: [
     { name: 'Hyderabad, India', location: [17.385, 78.4867] },
