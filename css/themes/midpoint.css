@@ -1,0 +1,153 @@
+/* ==========================================================================
+   Theme: Midpoint  (Hybrid: ground and accent both interpolated halfway)
+   Ground: hue 234, sat 18%, L 10.6%   Accent hue: 25
+   Audited 2026-09-23: all text >= 4.5:1 on --bg and --surface in both themes;
+   globe nodes >= 3:1 on the sphere. Red/gold/orange converge under red-green
+   colour blindness, so the globe also separates nodes by size and shape (the
+   gold node is drawn as a ring) and names every city on hover.
+   (parents: Ayu Mirage ground L 15.5% hue 222 / accent hue 40;
+             Ember     ground L  5.5% hue 240 / accent hue  9)
+   ------------------------------------------------------------------------
+   This file holds COLOR and FONT tokens only. No layout lives here; all
+   layout/components are in css/style.css and reference these tokens via
+   var(--token). style.css never uses raw color literals.
+
+   How to make a new theme:
+     1. Copy this file, e.g. css/themes/my-theme.css.
+     2. Change the token VALUES below (keep every token NAME - style.css and
+        js/main.js depend on them). Provide both the dark block and the light
+        block (the light block appears twice: once for data-theme="light",
+        once for the prefers-color-scheme fallback - keep them identical).
+     3. In index.html, swap the <link href="css/themes/nord.css"> for your
+        file. Nothing else needs to change.
+     4. Check text tokens reach 4.5:1 contrast on --bg and --surface.
+
+   Theme selection:
+     :root / [data-theme="dark"]   -> dark (default)
+     [data-theme="light"]          -> light
+     no data-theme + OS light      -> light (fallback if JS is unavailable)
+   ========================================================================== */
+
+/* --- Raw palette + non-color tokens (theme-independent) ------------------ */
+:root {
+  /* Midpoint - dark variant (dusk) */
+  --mp-ink0: #161720;
+  --mp-ink1: #1D1F28;
+  --mp-ink2: #242630;
+  --mp-ink3: #323441;
+  --mp-ink4: #464958;
+  --mp-ash: #868998;
+  --mp-smoke: #B8BAC7;
+  --mp-chalk: #EDEEF2;
+  --mp-accent: #FF9A52;
+  --mp-accent2: #7ABAEB;
+  --mp-gold: #FFB957;
+  --mp-jade: #64D36D;
+  --mp-crimson: #FF5757;
+  /* Midpoint - light variant (overcast) */
+  --mp-light-paper0: #F8F8FA;
+  --mp-light-paper1: #FDFDFD;
+  --mp-light-paper2: #EBEBF0;
+  --mp-light-faint: #676B7E;
+  --mp-light-dim: #3D4051;
+  --mp-light-strong: #181A25;
+  --mp-light-accent: #CA641C;
+  --mp-light-accent2: #2C6896;
+  --mp-light-gold: #8A570F;
+  --mp-light-jade: #196620;
+  --mp-light-crimson: #B42D2D;
+
+  /* Shape + fonts */
+  --radius: 16px;
+  --radius-sm: 10px;
+  --maxw: 1100px;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-script: 'Pacifico', cursive;
+
+  /* Globe web (js/globe.js). Spokes and ordinary nodes use --accent. */
+}
+
+/* --- Dark (default) ------------------------------------------------------- */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #161720;  /* ink0 */
+  --bg-alt: #242630;  /* ink2 */
+  --surface: #242630;  /* ink2 */
+  --surface-border: rgba(237, 238, 242, 0.10);  /* hairline on cards */
+  --text: #EDEEF2;  /* chalk; 12.98:1 on surface */
+  --text-dim: #B8BAC7;  /* smoke; 7.80:1 on surface */
+  --text-faint: #898C9A;  /* ash lightened; 4.50:1 on surface */
+  --accent: #FF9A52;  /* accent; 7.17:1 on surface */
+  --accent-2: #7ABAEB;  /* accent2; decorative/hover bg, not small text on surface */
+  --accent-contrast: #161720;  /* ink0; text on accent buttons, 8.49:1 */
+  --pill-bg: #1D1F28;  /* ink1; tag pills read as inset on a card */
+  --success: #64D36D;  /* jade; 7.94:1 on surface */
+  --focus-ring: #FF9A52;  /* accent */
+  --glow-1: rgba(255, 154, 82, 0.14);
+  --glow-2: rgba(122, 186, 235, 0.10);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --nav-bg: rgba(22, 23, 32, 0.75);
+  /* Globe web: nodes sit on the dark sphere */
+  --globe-hub: #FF5757;        /* home node (Vienna) */
+  --globe-gold-from: #F58F00;  /* gold node, center */
+  --globe-gold-to: #FFB957;    /* gold node, edge */
+  --globe-base: #323441;  /* ink3 */
+}
+
+/* --- Light ---------------------------------------------------------------- */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F8F8FA;  /* paper0 */
+  --bg-alt: #FDFDFD;  /* paper1 */
+  --surface: #FDFDFD;  /* paper1 */
+  --surface-border: rgba(24, 26, 37, 0.12);  /* hairline on cards */
+  --text: #181A25;  /* strong; 17.02:1 on surface */
+  --text-dim: #3D4051;  /* dim; 10.07:1 on surface */
+  --text-faint: #65697B;  /* faint; 5.35:1 on surface, 4.58:1 on --pill-bg */
+  --accent: #B45919;  /* accent darkened; 4.71:1 on surface */
+  --accent-2: #2C6896;  /* accent2; decorative/hover bg, not small text on surface */
+  --accent-contrast: #F8F8FA;  /* paper0; text on accent buttons, 4.52:1 */
+  --pill-bg: #EBEBF0;  /* paper2; tag pills read as inset on a card */
+  --success: #196620;  /* jade; 6.97:1 on surface */
+  --focus-ring: #CA641C;  /* accent */
+  --glow-1: rgba(202, 100, 28, 0.10);
+  --glow-2: rgba(44, 104, 150, 0.08);
+  --shadow: 0 10px 30px rgba(24, 26, 37, 0.10);
+  --nav-bg: rgba(248, 248, 250, 0.80);
+  /* Globe web: darkened so the nodes stay visible on a light sphere */
+  --globe-hub: #FF2020;        /* home node (Vienna); 3.23:1 on the sphere */
+  --globe-gold-from: #A55F00;  /* gold node, center */
+  --globe-gold-to: #BB6D00;    /* gold node, edge; 3.33:1 on the sphere */
+  --globe-base: #EBEBF0;  /* paper2 */
+}
+
+/* --- Light fallback: OS prefers light and no explicit choice -------------- */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #F8F8FA;  /* paper0 */
+    --bg-alt: #FDFDFD;  /* paper1 */
+    --surface: #FDFDFD;  /* paper1 */
+    --surface-border: rgba(24, 26, 37, 0.12);  /* hairline on cards */
+    --text: #181A25;  /* strong; 17.02:1 on surface */
+    --text-dim: #3D4051;  /* dim; 10.07:1 on surface */
+    --text-faint: #65697B;  /* faint; 5.35:1 on surface, 4.58:1 on --pill-bg */
+    --accent: #B45919;  /* accent darkened; 4.71:1 on surface */
+    --accent-2: #2C6896;  /* accent2; decorative/hover bg, not small text on surface */
+    --accent-contrast: #F8F8FA;  /* paper0; text on accent buttons, 4.52:1 */
+    --pill-bg: #EBEBF0;  /* paper2; tag pills read as inset on a card */
+    --success: #196620;  /* jade; 6.97:1 on surface */
+    --focus-ring: #CA641C;  /* accent */
+    --glow-1: rgba(202, 100, 28, 0.10);
+    --glow-2: rgba(44, 104, 150, 0.08);
+    --shadow: 0 10px 30px rgba(24, 26, 37, 0.10);
+    --nav-bg: rgba(248, 248, 250, 0.80);
+  /* Globe web: darkened so the nodes stay visible on a light sphere */
+    --globe-hub: #FF2020;        /* home node (Vienna); 3.23:1 on the sphere */
+    --globe-gold-from: #A55F00;  /* gold node, center */
+    --globe-gold-to: #BB6D00;    /* gold node, edge; 3.33:1 on the sphere */
+    --globe-base: #EBEBF0;  /* paper2 */
+  }
+}

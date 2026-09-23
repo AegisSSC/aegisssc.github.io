@@ -161,7 +161,7 @@ function buildWeb(location, anchors, homeName) {
       name: a.name || '',
       gold: a.style === 'gold',
       // Optional size multiplier; gold nodes default slightly larger.
-      size: a.size > 0 ? a.size : (a.style === 'gold' ? 1.25 : 1),
+      size: a.size > 0 ? a.size : (a.style === 'gold' ? 1.4 : 1),   // ring needs a little more room
       angle: bearing(location, a.location),
     }))
     .sort((a, b) => a.angle - b.angle);
@@ -223,16 +223,38 @@ function drawWeb(ctx, web, colors, phi, theta, zoom, now, reducedMotion) {
   // Nodes: on the surface, so they fade out as they reach the rim.
   // Each drawn node is recorded (canvas px) for hover hit-testing.
   const hits = [];
-  function node(vec, radius, fill, name) {
+  // ring: draw the node as an open circle instead of a filled dot, so it is
+  // told apart by shape as well as colour (red, gold and the accent orange
+  // converge under red-green colour blindness).
+  function node(vec, radius, fill, name, ring) {
     const p = toScreen(vec, phi, theta);
     const a = clamp01(p[2] / 0.12);
     if (a <= 0) return null;
     const [x, y] = px(p);
     if (name && a > 0.3) hits.push({ x, y, r: radius, name });
     ctx.globalAlpha = a;
+    const paint = typeof fill === 'function' ? fill(x, y) : fill;
+    if (ring) {
+      // Hollow centre, then the coloured band, then a thin outline each side.
+      ctx.beginPath();
+      ctx.arc(x, y, radius * 0.45, 0, 2 * Math.PI);
+      ctx.fillStyle = colors.outline;
+      ctx.fill();
+      ctx.lineWidth = radius * 0.55;
+      ctx.strokeStyle = paint;
+      ctx.beginPath();
+      ctx.arc(x, y, radius * 0.72, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.lineWidth = Math.max(1, unit * 0.8);
+      ctx.strokeStyle = colors.outline;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, 2 * Math.PI);
+      ctx.stroke();
+      return [x, y, a];
+    }
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, 2 * Math.PI);
-    ctx.fillStyle = typeof fill === 'function' ? fill(x, y) : fill;
+    ctx.fillStyle = paint;
     ctx.fill();
     ctx.lineWidth = Math.max(1, unit);
     ctx.strokeStyle = colors.outline;
@@ -250,7 +272,7 @@ function drawWeb(ctx, web, colors, phi, theta, zoom, now, reducedMotion) {
         return g;
       }
       : colors.node;
-    node(n.vec, radius, fill, n.name);
+    node(n.vec, radius, fill, n.name, n.gold);
   });
 
   // Home: red, with a halo that pulses (static under reduced motion).

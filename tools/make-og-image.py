@@ -44,13 +44,13 @@ CONTENT_JS = ROOT / "js" / "content.js"
 IMAGES = ROOT / "images"
 MANIFEST = ROOT / "site.webmanifest"
 
-# Nord palette, mirroring css/themes/nord.css (dark theme).
-BG = "#2E3440"        # --bg      / nord0
-SURFACE = "#3B4252"   # --surface / nord1
-TEXT = "#ECEFF4"      # --text    / nord6
-TEXT_DIM = "#D8DEE9"  # --text-dim/ nord4
-ACCENT = "#88C0D0"    # --accent  / nord8
-GLOW_2 = "#B48EAD"    # nord15, the second background glow on the page
+# Nord palette, mirroring css/themes/midpoint.css (dark theme).
+BG = "#161720"        # --bg      / midpoint dusk
+SURFACE = "#242630"   # --surface / midpoint
+TEXT = "#EDEEF2"      # --text    / midpoint
+TEXT_DIM = "#B8BAC7"  # --text-dim/ midpoint
+ACCENT = "#FF9A52"    # --accent  / midpoint tangerine
+GLOW_2 = "#7ABAEB"    # --accent-2, the second background glow on the page
 
 # Font candidates, in order of preference.  The script fails loudly rather
 # than silently falling back to Pillow's tiny bitmap default.
