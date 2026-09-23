@@ -1081,6 +1081,62 @@ a:hover .link-arrow {
   margin: 0 auto; /* resolves to 0 while it overflows, so it scrolls from the left */
 }
 
+/* Contribution grid: one square per day, drawn by js/main.js from the raw
+   counts so every shade is a theme token (the hosted image is the fallback). */
+.activity-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 11px);
+  grid-auto-flow: column;
+  grid-auto-columns: 11px;
+  gap: 3px;
+  justify-content: start;
+  min-width: 0;
+}
+
+.activity-months {
+  display: grid;
+  grid-auto-columns: 11px;
+  grid-auto-flow: column;
+  gap: 3px;
+  justify-content: start;
+  min-width: 0;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.4;
+}
+
+.activity-day {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--pill-bg);
+  border: 1px solid var(--surface-border);
+}
+
+.activity-day.is-pad {
+  background: none;
+  border-color: transparent;
+}
+
+/* Levels 1-4 layer the accent over the empty square, so the ramp behaves the
+   same in both themes. The lightest step starts at 0.55, not near-zero: the
+   hosted chart's faintest shade washed out on a light card. */
+.activity-day[data-level="1"] { background: var(--accent); opacity: 0.55; border-color: transparent; }
+.activity-day[data-level="2"] { background: var(--accent); opacity: 0.7; border-color: transparent; }
+.activity-day[data-level="3"] { background: var(--accent); opacity: 0.85; border-color: transparent; }
+.activity-day[data-level="4"] { background: var(--accent); opacity: 1; border-color: transparent; }
+
+.activity-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-self: end;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
 .activity-fallback {
   color: var(--text-faint);
   font-family: var(--font-mono);

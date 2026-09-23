@@ -728,6 +728,86 @@
     if (fallback) fallback.hidden = true;
   }
 
+  // The hosted chart image bakes in its own colours (a pale orange for the
+  // lightest level, #EEEEEE for empty days) which read badly on both themes.
+  // So fetch the raw per-day counts and draw the grid ourselves, in tokens.
+  const ACTIVITY_API = 'https://github-contributions-api.jogruber.de/v4/';
+  const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  function buildActivityGrid(days, user) {
+    const grid = document.createElement('div');
+    grid.className = 'activity-grid';
+    grid.setAttribute('role', 'img');
+
+    // Pad the first column so each row is one weekday, as GitHub draws it.
+    const first = new Date(days[0].date + 'T00:00:00');
+    for (let i = 0; i < first.getDay(); i++) {
+      const pad = document.createElement('span');
+      pad.className = 'activity-day is-pad';
+      grid.appendChild(pad);
+    }
+
+    let total = 0;
+    days.forEach(function (day) {
+      const count = Number(day.count) || 0;
+      total += count;
+      const cell = document.createElement('span');
+      cell.className = 'activity-day';
+      cell.dataset.level = String(Math.max(0, Math.min(4, Number(day.level) || 0)));
+      const when = new Date(day.date + 'T00:00:00');
+      cell.title = count + (count === 1 ? ' contribution on ' : ' contributions on ') +
+        DAY_NAMES[when.getDay()] + ', ' + day.date;
+      grid.appendChild(cell);
+    });
+
+    grid.setAttribute('aria-label',
+      total + ' contributions by ' + user + ' in the last year, one square per day');
+    return grid;
+  }
+
+  // Month labels above the grid: one label per month, spanning that month's
+  // columns, skipped where a month has too few weeks on screen to fit a label.
+  function buildActivityMonths(days, leadingPad) {
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const row = document.createElement('div');
+    row.className = 'activity-months';
+    row.setAttribute('aria-hidden', 'true');
+
+    const spans = [];
+    days.forEach(function (day, i) {
+      const column = Math.floor((i + leadingPad) / 7) + 1;
+      const month = Number(day.date.slice(5, 7)) - 1;
+      const last = spans[spans.length - 1];
+      if (!last || last.month !== month) spans.push({ month: month, start: column, end: column });
+      else last.end = column;
+    });
+
+    spans.forEach(function (span) {
+      const width = span.end - span.start + 1;
+      const cell = document.createElement('span');
+      cell.style.gridColumn = span.start + ' / span ' + width;
+      if (width >= 3) cell.textContent = MONTHS[span.month];
+      row.appendChild(cell);
+    });
+    return row;
+  }
+
+  function buildActivityLegend() {
+    const legend = document.createElement('div');
+    legend.className = 'activity-legend';
+    legend.setAttribute('aria-hidden', 'true');
+    legend.appendChild(document.createTextNode('Less'));
+    for (let level = 0; level <= 4; level++) {
+      const cell = document.createElement('span');
+      cell.className = 'activity-day';
+      cell.dataset.level = String(level);
+      legend.appendChild(cell);
+    }
+    legend.appendChild(document.createTextNode('More'));
+    return legend;
+  }
+
   function initActivity() {
     const img = document.getElementById('activityChart');
     const user = siteString('github');
@@ -737,10 +817,36 @@
     img.addEventListener('error', onActivityChartError);
     img.addEventListener('load', onActivityChartLoad);
     updateActivityChart();
-    // Re-colour the chart when the theme changes (--accent differs per theme).
-    if (!window.MutationObserver) return;
-    const observer = new MutationObserver(updateActivityChart);
-    observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    // Re-colour the hosted fallback when the theme changes.
+    if (window.MutationObserver) {
+      const observer = new MutationObserver(updateActivityChart);
+      observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+
+    if (!window.fetch) return;
+    fetch(ACTIVITY_API + encodeURIComponent(activityUser) + '?y=last')
+      .then(function (res) {
+        if (!res.ok) throw new Error('contributions API ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        const days = data && Array.isArray(data.contributions) ? data.contributions : [];
+        if (!days.length) return;
+        const card = img.parentNode;
+        if (!card) return;
+        const leadingPad = new Date(days[0].date + 'T00:00:00').getDay();
+        const grid = buildActivityGrid(days, activityUser);
+        card.insertBefore(buildActivityMonths(days, leadingPad), img);
+        card.insertBefore(grid, img);
+        card.insertBefore(buildActivityLegend(), img.nextSibling);
+        img.hidden = true;   // the hosted image was only ever the fallback
+        const fallback = activityFallback();
+        if (fallback) fallback.hidden = true;
+      })
+      .catch(function (err) {
+        // The hosted chart image stays on screen; nothing to undo.
+        if (window.console && console.warn) console.warn('Contribution grid unavailable:', err);
+      });
   }
 
   // ---------- Contact ----------
