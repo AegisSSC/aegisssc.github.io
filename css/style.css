@@ -48,6 +48,10 @@ a {
   text-decoration: none;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 button {
   font: inherit;
   color: inherit;
@@ -334,9 +338,33 @@ p {
   gap: 20px;
   min-height: 100vh;
   min-height: 100svh;
-  padding: calc(var(--header-h) + 32px) var(--gutter) 48px;
+  position: relative;
+  padding: calc(var(--header-h) + 32px) var(--gutter) 96px;
   text-align: center;
   scroll-margin-top: var(--header-h);
+}
+
+/* Staged entrance: children fade/slide up in sequence (off under reduced motion) */
+.hero > * {
+  animation: hero-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.hero > :nth-child(2) { animation-delay: 80ms; }
+.hero > :nth-child(3) { animation-delay: 160ms; }
+.hero > :nth-child(4) { animation-delay: 240ms; }
+.hero > :nth-child(5) { animation-delay: 320ms; }
+.hero > :nth-child(6) { animation-delay: 400ms; }
+.hero > :nth-child(7) { animation-delay: 560ms; }
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .avatar {
@@ -367,11 +395,35 @@ p {
 }
 
 .status-pill .dot {
+  position: relative;
+  flex-shrink: 0;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--success);
   box-shadow: 0 0 0 3px var(--surface-border);
+}
+
+/* Soft pulse ring; static (hidden under the dot) with reduced motion */
+.status-pill .dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--success);
+  animation: dot-pulse 2.4s ease-out infinite;
+}
+
+@keyframes dot-pulse {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
 }
 
 .hero-title {
@@ -383,6 +435,18 @@ p {
   font-family: var(--font-script);
   font-weight: 400;
   color: var(--accent);
+}
+
+/* Accent gradient text; plain --accent where background-clip:text is unsupported */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .script {
+    padding: 0 0.08em; /* room for Pacifico swashes inside the clipped box */
+    background-image: linear-gradient(100deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
 .hero-sub {
@@ -401,6 +465,59 @@ p {
   color: var(--text-faint);
   font-family: var(--font-mono);
   font-size: 0.85rem;
+}
+
+/* Scroll cue: small mouse outline with a bobbing wheel */
+.scroll-cue {
+  position: absolute;
+  bottom: 28px;
+  left: 0;
+  right: 0;
+  width: 26px;
+  height: 40px;
+  margin: 0 auto;
+  border: 2px solid var(--text-faint);
+  border-radius: 13px;
+  transition: border-color var(--ease);
+}
+
+.scroll-cue span {
+  display: block;
+  width: 4px;
+  height: 8px;
+  margin: 7px auto 0;
+  border-radius: 2px;
+  background: var(--text-faint);
+  animation: cue-bob 1.8s ease-in-out infinite;
+  transition: background-color var(--ease);
+}
+
+.scroll-cue:hover {
+  border-color: var(--accent);
+}
+
+.scroll-cue:hover span {
+  background: var(--accent);
+}
+
+.scroll-cue:focus-visible {
+  border-radius: 13px;
+}
+
+@keyframes cue-bob {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  60% {
+    opacity: 0.3;
+    transform: translateY(10px);
+  }
+}
+
+@media (max-height: 560px) {
+  .scroll-cue { display: none; }
 }
 
 /* --- Sections ------------------------------------------------------------- */
@@ -479,8 +596,11 @@ p {
   min-height: 280px;
 }
 
-.bento-location .placeholder {
-  flex: 1;
+.bento-big {
+  color: var(--text);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .bento-label {
@@ -511,11 +631,190 @@ p {
 }
 
 .bento-connect a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: var(--accent);
 }
 
 .bento-connect a:hover {
   text-decoration: underline;
+}
+
+.link-arrow {
+  display: inline-block;
+  transition: transform var(--ease);
+}
+
+.bento-connect a:hover .link-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* --- Globe (canvas driven by js/globe.js) --------------------------------- */
+.globe-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 546px;
+  aspect-ratio: 1;
+  margin: auto;
+  cursor: grab;
+  touch-action: none;   /* drags spin and tilt the globe in both directions */
+  -webkit-user-select: none;
+  user-select: none;     /* double-click zooms instead of selecting text */
+}
+
+.globe-wrap.is-dragging {
+  cursor: grabbing;
+}
+
+.globe-wrap.is-fallback {
+  cursor: default;
+}
+
+#globe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 800ms ease;
+}
+
+/* Overlay for the web of anchor points, drawn in sync with the globe. */
+.globe-web {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 800ms ease 200ms;
+}
+
+.globe-wrap.is-ready #globe,
+.globe-wrap.is-ready .globe-web {
+  opacity: 1;
+}
+
+.globe-wrap.is-fallback .globe-web {
+  display: none;
+}
+
+.globe-wrap.is-over-node {
+  cursor: pointer;
+}
+
+/* City name shown above a hovered (or tapped) node. */
+.globe-tip {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, calc(-100% - 8px));
+  padding: 4px 10px;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  white-space: pre;   /* overlapping nodes list one city per line */
+  pointer-events: none;
+}
+
+.globe-hint {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  right: 0;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 800ms ease;
+}
+
+.globe-wrap.is-ready .globe-hint {
+  opacity: 1;
+}
+
+.globe-fallback {
+  position: absolute;
+  inset: 8%;
+  display: grid;
+  place-items: center;
+  border: 2px dashed var(--surface-border);
+  border-radius: 50%;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* --- Tool marquee --------------------------------------------------------- */
+.tool-marquee {
+  --tool-gap: 36px;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  padding: 6px 0;
+  /* Edge fade: the mask only uses alpha, so any opaque token works */
+  -webkit-mask-image: linear-gradient(90deg, transparent, var(--text) 10%, var(--text) 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, var(--text) 10%, var(--text) 90%, transparent);
+}
+
+.tool-track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-around;
+  gap: var(--tool-gap);
+  min-width: 100%;
+  padding-right: var(--tool-gap); /* same spacing across the seam between the two tracks */
+  animation: tool-scroll 30s linear infinite;
+}
+
+.tool-marquee:hover .tool-track,
+.tool-marquee:focus-within .tool-track {
+  animation-play-state: paused;
+}
+
+@keyframes tool-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+.tool {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.tool-icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  background: var(--text-dim);
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+  transition: background-color var(--ease);
+}
+
+.tool:hover .tool-icon {
+  background: var(--accent);
+}
+
+/* Name is for screen readers only (the icon + title tooltip carry it visually) */
+.tool-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (min-width: 761px) {
@@ -622,5 +921,23 @@ p {
   *::after {
     transition: none !important;
     animation: none !important;
+  }
+
+  /* Tool strip: static, wrapped, single copy */
+  .tool-marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .tool-track {
+    flex-shrink: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px 28px;
+    padding-right: 0;
+  }
+
+  .tool-track[aria-hidden="true"] {
+    display: none;
   }
 }

@@ -51,6 +51,11 @@
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --font-script: 'Pacifico', cursive;
+
+  /* Globe web (js/globe.js). Spokes and ordinary nodes use --accent. */
+  --globe-hub: #BF616A;        /* nord11: home node (Vienna) */
+  --globe-gold-from: #C9962B;  /* gold node gradient, center */
+  --globe-gold-to: #EBCB8B;    /* nord13: gold node gradient, edge */
 }
 
 /* --- Dark (default) ------------------------------------------------------- */

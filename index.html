@@ -30,6 +30,8 @@
   <link rel="stylesheet" href="css/themes/nord.css">
   <link rel="stylesheet" href="css/style.css">
 
+  <!-- Content (name, links, tools...) lives in js/content.js; must load before main.js -->
+  <script src="js/content.js" defer></script>
   <script src="js/main.js" defer></script>
 </head>
 <body>
@@ -38,8 +40,8 @@
 
   <header class="site-header" id="siteHeader">
     <nav class="nav" aria-label="Primary">
-      <!-- TBD: initials -->
-      <a href="#home" class="logo" aria-label="Home"><span class="logo-mark">YN</span></a>
+      <!-- Placeholder text below is replaced from js/content.js (data-site) -->
+      <a href="#home" class="logo" aria-label="Home"><span class="logo-mark" data-site="initials">YN</span></a>
 
       <ul class="nav-links">
         <li><a href="#home">Home</a></li>
@@ -80,18 +82,17 @@
   <main id="main">
     <!-- ============ Hero ============ -->
     <section id="home" class="hero">
-      <!-- TBD: initials (photo can replace this later) -->
-      <div class="avatar" aria-hidden="true">YN</div>
-      <span class="status-pill"><span class="dot"></span>Open to collaboration</span>
-      <!-- TBD: your name -->
-      <h1 class="hero-title">Hi. I'm <span class="script">Your Name</span></h1>
-      <p class="hero-sub">TBD one-line tagline.</p>
+      <!-- Text in data-site elements comes from js/content.js (photo can replace the avatar later) -->
+      <div class="avatar" aria-hidden="true" data-site="initials">YN</div>
+      <span class="status-pill"><span class="dot" aria-hidden="true"></span><span data-site="status">Open to collaboration</span></span>
+      <h1 class="hero-title">Hi. I'm <span class="script" data-site="name">Your Name</span></h1>
+      <p class="hero-sub" data-site="tagline">TBD one-line tagline.</p>
       <div class="hero-actions">
         <a href="#projects" class="btn btn-primary">View my projects <span class="arrow" aria-hidden="true">→</span></a>
         <a href="#contact" class="btn btn-ghost">Get in touch</a>
       </div>
-      <!-- TBD: your city -->
-      <span class="location-chip">Vienna, Austria</span>
+      <span class="location-chip" data-site="city">Vienna, Austria</span>
+      <a href="#glance" class="scroll-cue" aria-label="Scroll down"><span></span></a>
     </section>
 
     <!-- ============ At a glance (bento) ============ -->
@@ -100,26 +101,30 @@
         <div class="bento-grid">
           <div class="bento-card bento-location">
             <span class="bento-label">Base</span>
-            <div class="placeholder">Globe centered on Vienna — M2</div>
+            <p class="bento-big"><span data-site="city">Vienna, Austria</span></p>
+            <div class="globe-wrap" id="globeWrap">
+              <canvas id="globe" role="img" aria-label="Globe centered on Vienna, Austria"></canvas>
+              <canvas id="globeWeb" class="globe-web" aria-hidden="true"></canvas>
+              <span class="globe-hint" aria-hidden="true">Drag to spin or tilt · double-click to zoom</span>
+              <p class="globe-fallback" hidden>48.21° N, 16.37° E</p>
+            </div>
           </div>
           <div class="bento-card bento-clock">
             <span class="bento-label">Local time</span>
-            <p class="bento-clock-time" id="localClock">--:--:--</p>
-            <!-- TBD: your city -->
-            <span class="bento-sub">Vienna, Austria</span>
+            <p class="bento-clock-time" id="localClock" aria-live="off">--:--:--</p>
+            <span class="bento-sub"><span data-site="city">Vienna, Austria</span> · <span id="localZone">CET</span></span>
           </div>
           <div class="bento-card bento-connect">
             <span class="bento-label">Connect</span>
-            <!-- TBD: real profile links -->
-            <ul class="connect-links">
-              <li><a href="https://github.com/aegisssc" target="_blank" rel="noopener">GitHub</a></li>
-              <li><a href="#">LinkedIn (TBD)</a></li>
-              <li><a href="#">Email (TBD)</a></li>
+            <!-- Static fallback; main.js rebuilds this list from SITE.links -->
+            <ul class="connect-links" id="connectLinks">
+              <li><a href="https://github.com/aegisssc" target="_blank" rel="noopener">GitHub <span class="link-arrow" aria-hidden="true">↗</span></a></li>
             </ul>
           </div>
           <div class="bento-card bento-tools">
             <span class="bento-label">Tools</span>
-            <div class="placeholder">Tool logos — M2</div>
+            <!-- Filled by main.js from SITE.tools -->
+            <div class="tool-marquee" id="toolMarquee"></div>
           </div>
         </div>
       </div>
@@ -196,7 +201,7 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <span class="logo-mark">YN</span>
+        <span class="logo-mark" data-site="initials">YN</span>
         <p>TBD short bio.</p>
       </div>
       <div class="footer-col">
@@ -221,8 +226,7 @@
         </ul>
       </div>
     </div>
-    <!-- TBD: your name -->
-    <div class="footer-bottom">© <span id="year">2026</span> Your Name</div>
+    <div class="footer-bottom">© <span id="year">2026</span> <span data-site="name">Your Name</span></div>
   </footer>
 </body>
 </html>
