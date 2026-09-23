@@ -1,6 +1,7 @@
 /* main.js: theme toggle, mobile nav, scrolled header, footer year,
    SITE data binding, local clock, connect links, tool marquee, globe loader,
-   and the M3 content renderers (about, projects, skills, activity chart, contact).
+   and the M3 content renderers (about, projects, skills, experience, education,
+   activity chart, contact).
    Plain ES2017, no dependencies (globe.js is lazy-loaded). Every DOM lookup is null-safe. */
 (function () {
   'use strict';
@@ -614,6 +615,75 @@
     grid.appendChild(fragment);
   }
 
+  // ---------- Timeline (experience + education) ----------
+  // Both sections render the same way; only the heading field differs
+  // (role for experience, degree for education).
+  function timelineDates(entry) {
+    const start = typeof entry.start === 'string' ? entry.start.trim() : '';
+    const end = typeof entry.end === 'string' ? entry.end.trim() : '';
+    if (start && end) return start + ' — ' + end;
+    return start || end;
+  }
+
+  function buildTimelineItem(entry, titleKey) {
+    if (!entry || typeof entry !== 'object') return null;
+    const title = typeof entry[titleKey] === 'string' ? entry[titleKey].trim() : '';
+    if (!title) return null; // no role/degree: nothing to head the entry with
+    const org = typeof entry.org === 'string' ? entry.org.trim() : '';
+    const place = typeof entry.place === 'string' ? entry.place.trim() : '';
+
+    const item = document.createElement('li');
+    item.className = 'timeline-item';
+
+    // The rail and the dot are drawn in CSS, so nothing decorative lands here.
+    const heading = document.createElement('h4');
+    heading.className = 'timeline-role';
+    heading.textContent = org ? title + ' · ' + org : title;
+    item.appendChild(heading);
+
+    const parts = [timelineDates(entry), place].filter(Boolean);
+    if (parts.length) {
+      const meta = document.createElement('p');
+      meta.className = 'timeline-meta';
+      meta.textContent = parts.join(' · ');
+      item.appendChild(meta);
+    }
+
+    if (typeof entry.blurb === 'string' && entry.blurb.trim()) {
+      const blurb = document.createElement('p');
+      blurb.className = 'timeline-blurb';
+      blurb.textContent = entry.blurb.trim();
+      item.appendChild(blurb);
+    }
+
+    const tags = buildTags(entry.tags);
+    if (tags.children.length) item.appendChild(tags);
+    return item;
+  }
+
+  function fillTimeline(listId, key, titleKey) {
+    const list = document.getElementById(listId);
+    const entries = siteArray(key);
+    if (!list || !entries) return;
+
+    const fragment = document.createDocumentFragment();
+    entries.forEach(function (entry) {
+      const item = buildTimelineItem(entry, titleKey);
+      if (item) fragment.appendChild(item);
+    });
+    if (!fragment.childNodes.length) return; // keep the static fallback entry
+    list.textContent = '';
+    list.appendChild(fragment);
+  }
+
+  function initExperience() {
+    fillTimeline('experienceList', 'experience', 'role');
+  }
+
+  function initEducation() {
+    fillTimeline('educationList', 'education', 'degree');
+  }
+
   // ---------- Activity (GitHub contribution chart) ----------
   const CHART_BASE = 'https://ghchart.rshah.org/';
   let activityChart = null;
@@ -768,7 +838,8 @@
     // M2: each step is isolated so one failure never blocks the rest.
     // initReveal runs first: the page must become visible even if a later step throws.
     [initReveal, initSiteText, initClock, initConnectLinks, initToolMarquee, initGlobe,
-      initAbout, initProjects, initSkills, initActivity, initContact].forEach(function (step) {
+      initAbout, initProjects, initSkills, initExperience, initEducation,
+      initActivity, initContact].forEach(function (step) {
       try {
         step();
       } catch (e) {

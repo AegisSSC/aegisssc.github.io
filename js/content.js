@@ -1,5 +1,6 @@
 // Site content. Edit this file to change what the page shows.
-// (M3 adds about, projects, skills and the GitHub handle for the activity chart.)
+// (M3 adds about, projects, skills, experience, education and the GitHub handle
+// for the activity chart.)
 window.SITE = {
   name: 'Your Name',            // TBD
   initials: 'YN',               // TBD
@@ -128,6 +129,61 @@ window.SITE = {
     { group: 'Web', items: ['SvelteKit', 'HTML', 'CSS', 'Markdown'] },
     { group: 'Data', items: ['Pandas', 'Linfa', 'Jupyter'] },
     { group: 'Systems & tools', items: ['Linux', 'Git', 'Neovim', 'OpenGL'] },
+  ],
+  // Experience, newest first - the order here is the order on the page.
+  //   role  (required) job title; an entry without one is skipped
+  //   org   (required) company or team
+  //   place (optional) city, country - or 'Remote'
+  //   start (required) free text, e.g. '2023' or 'Jan 2023'
+  //   end   (required) same format, or 'Present' for a current role
+  //   blurb (optional) one or two sentences about the work
+  //   tags  (optional) small pills, e.g. ['Rust', 'Embedded']
+  // TBD - both entries below are placeholders; replace them with real roles.
+  experience: [
+    {
+      role: 'TBD job title',
+      org: 'TBD company',
+      place: 'TBD city, country',
+      start: 'TBD start',
+      end: 'Present',
+      blurb: 'TBD: one or two sentences about what you did and what it ran on.',
+      tags: ['TBD tag', 'TBD tag'],
+    },
+    {
+      role: 'TBD earlier job title',
+      org: 'TBD earlier company',
+      place: 'TBD city, country',
+      start: 'TBD start',
+      end: 'TBD end',
+      blurb: 'TBD: one or two sentences about the earlier role.',
+      tags: ['TBD tag'],
+    },
+  ],
+  // Education, newest first. Same shape as experience, minus tags.
+  //   degree (required) e.g. 'BSc Computer Science'; an entry without one is skipped
+  //   org    (required) school or university
+  //   place  (optional) city, country
+  //   start  (required) free text, e.g. '2019'
+  //   end    (required) same format, or 'Present' while still studying
+  //   blurb  (optional) one or two sentences - focus, thesis, honours
+  // TBD - both entries below are placeholders; replace them with real studies.
+  education: [
+    {
+      degree: 'TBD degree',
+      org: 'TBD school',
+      place: 'TBD city, country',
+      start: 'TBD start',
+      end: 'TBD end',
+      blurb: 'TBD: focus, thesis or anything worth naming.',
+    },
+    {
+      degree: 'TBD earlier degree',
+      org: 'TBD earlier school',
+      place: 'TBD city, country',
+      start: 'TBD start',
+      end: 'TBD end',
+      blurb: 'TBD: focus, thesis or anything worth naming.',
+    },
   ],
   // GitHub contribution chart (Activity section).
   github: 'aegisssc',
