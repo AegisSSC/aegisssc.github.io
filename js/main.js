@@ -183,9 +183,10 @@
     const canvas = document.getElementById('globe');
     if (canvas && city) {
       const anchors = site() && Array.isArray(site().anchors) ? site().anchors : [];
+      // A count, not 20-odd names: a screen reader reads this label in one go.
       const names = anchors.map(function (a) { return a && a.name; }).filter(Boolean);
       canvas.setAttribute('aria-label', 'Globe centered on ' + city +
-        (names.length ? ', linked to ' + names.join('; ') : ''));
+        (names.length ? ', linked to ' + names.length + ' other locations' : ''));
     }
 
     const fallback = document.querySelector('#globeWrap .globe-fallback');
@@ -629,6 +630,52 @@
     fillLinkList(document.getElementById('footerLinks'), false);
   }
 
+  // ---------- Scroll reveal ----------
+  // The .reveal start state only exists under :root.js (set by the inline head
+  // script when IntersectionObserver exists), so anything that stops this from
+  // running leaves the page fully visible rather than blank.
+  const REVEAL_MARGIN = '0px 0px -8% 0px';
+  const REVEAL_FAILSAFE_MS = 10000;
+
+  function revealAll(nodes) {
+    for (let i = 0; i < nodes.length; i++) nodes[i].classList.add('is-visible');
+  }
+
+  function initReveal() {
+    const nodes = document.querySelectorAll('.reveal');
+    if (!nodes.length) return;
+    // No observer, or motion is unwelcome: show everything at once.
+    if (!('IntersectionObserver' in window) || prefersReducedMotion()) {
+      revealAll(nodes);
+      return;
+    }
+    const observer = new IntersectionObserver(function (entries) {
+      for (let i = 0; i < entries.length; i++) {
+        if (!entries[i].isIntersecting) continue;
+        entries[i].target.classList.add('is-visible');
+        observer.unobserve(entries[i].target); // once each
+      }
+    }, { rootMargin: REVEAL_MARGIN });
+    // Sections already on screen intersect on the first callback, so they
+    // reveal straight away instead of waiting for a scroll.
+    for (let i = 0; i < nodes.length; i++) observer.observe(nodes[i]);
+
+    // A tab that loads in the background runs no intersection callbacks, so
+    // nothing would ever reveal there. Arm a failsafe that gives up on the
+    // animation and shows everything; cancel it as soon as the tab is looked
+    // at, since the observer works from then on.
+    if (!document.hidden) return;
+    const failsafe = window.setTimeout(function () {
+      revealAll(nodes);
+      observer.disconnect();
+    }, REVEAL_FAILSAFE_MS);
+    document.addEventListener('visibilitychange', function onShow() {
+      if (document.hidden) return;
+      document.removeEventListener('visibilitychange', onShow);
+      window.clearTimeout(failsafe);
+    });
+  }
+
   // ---------- Init ----------
   function init() {
     themeToggle = document.getElementById('themeToggle');
@@ -640,7 +687,8 @@
     initScrolledHeader();
     initFooterYear();
     // M2: each step is isolated so one failure never blocks the rest.
-    [initSiteText, initClock, initConnectLinks, initToolMarquee, initGlobe,
+    // initReveal runs first: the page must become visible even if a later step throws.
+    [initReveal, initSiteText, initClock, initConnectLinks, initToolMarquee, initGlobe,
       initAbout, initProjects, initSkills, initActivity, initContact].forEach(function (step) {
       try {
         step();

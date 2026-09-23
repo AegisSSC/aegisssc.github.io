@@ -321,7 +321,11 @@ export function mountGlobe(wrap, {
         if (d < Math.max(h.r * 1.5, HOVER_RADIUS * scale) && d < bestD) { best = h; bestD = d; }
       }
       if (best) {
-        tip.style.left = best.x / scale + 'px';
+        // Keep the label inside the wrap: it is centered on the node, so a node
+        // near either rim would otherwise push it past the card edge.
+        const half = tip.offsetWidth / 2;
+        const limit = wrap.clientWidth;
+        tip.style.left = Math.min(Math.max(best.x / scale, half), Math.max(half, limit - half)) + 'px';
         tip.style.top = (best.y - best.r) / scale + 'px';
         // Nodes that overlap the hovered one (e.g. neighboring towns) share the label.
         const names = hits
@@ -426,6 +430,13 @@ export function mountGlobe(wrap, {
   const schemeQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
   if (schemeQuery && schemeQuery.addEventListener) schemeQuery.addEventListener('change', refreshTheme);
 
+  // ---------- Reduced motion ----------
+  // Followed live, so switching the OS setting on stops the spin, the spoke
+  // pulses and the home halo without a reload (and switching it off resumes).
+  const motionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  const onMotionChange = () => { reducedMotion = !!(motionQuery && motionQuery.matches); };
+  if (motionQuery && motionQuery.addEventListener) motionQuery.addEventListener('change', onMotionChange);
+
   // ---------- Drag + hover ----------
   // A tap (touch) on a node shows its name. Dragging sideways spins the globe;
   // dragging up/down tilts the view toward a pole. A double-click (or double-tap)
@@ -525,6 +536,7 @@ export function mountGlobe(wrap, {
       themeObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
       if (schemeQuery && schemeQuery.removeEventListener) schemeQuery.removeEventListener('change', refreshTheme);
+      if (motionQuery && motionQuery.removeEventListener) motionQuery.removeEventListener('change', onMotionChange);
       wrap.removeEventListener('pointerdown', onDown);
       wrap.removeEventListener('pointermove', onMove);
       wrap.removeEventListener('pointerup', onUp);

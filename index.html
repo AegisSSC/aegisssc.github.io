@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#2E3440">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
 
-  <!-- Anti-flash: set the theme before any stylesheet loads -->
+  <!-- Anti-flash: set the theme (and the scroll-reveal marker) before any stylesheet loads -->
   <script>
     (function () {
       var theme = null;
@@ -19,6 +19,9 @@
         theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
       }
       document.documentElement.dataset.theme = theme;
+      // The .reveal start state is scoped to :root.js, so it only ever applies
+      // when JS is running AND can observe the sections to reveal them again.
+      if ('IntersectionObserver' in window) document.documentElement.classList.add('js');
     })();
   </script>
 
@@ -65,18 +68,19 @@
           <span></span><span></span><span></span>
         </button>
       </div>
+
+      <ul class="nav-links-mobile" id="mobileNav">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#activity">Activity</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
     </nav>
 
-    <ul class="nav-links-mobile" id="mobileNav">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#activity">Activity</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
   </header>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <!-- ============ Hero ============ -->
     <section id="home" class="hero">
       <!-- Text in data-site elements comes from js/content.js (photo can replace the avatar later) -->
@@ -93,7 +97,7 @@
     </section>
 
     <!-- ============ At a glance (bento) ============ -->
-    <section id="glance" class="section bento" aria-label="At a glance">
+    <section id="glance" class="section bento reveal" aria-label="At a glance">
       <div class="section-inner">
         <div class="bento-grid">
           <div class="bento-card bento-location">
@@ -128,7 +132,7 @@
     </section>
 
     <!-- ============ About ============ -->
-    <section id="about" class="section about">
+    <section id="about" class="section about reveal">
       <div class="section-inner">
         <h2 class="section-label">About</h2>
         <h3 class="section-title">A bit about me</h3>
@@ -140,7 +144,7 @@
     </section>
 
     <!-- ============ Projects ============ -->
-    <section id="projects" class="section projects">
+    <section id="projects" class="section projects reveal">
       <div class="section-inner">
         <h2 class="section-label">Projects</h2>
         <h3 class="section-title">Things I've built</h3>
@@ -155,7 +159,7 @@
     </section>
 
     <!-- ============ Skills ============ -->
-    <section id="skills" class="section skills">
+    <section id="skills" class="section skills reveal">
       <div class="section-inner">
         <h2 class="section-label">Skills</h2>
         <h3 class="section-title">What I build with</h3>
@@ -175,11 +179,11 @@
     </section>
 
     <!-- ============ Activity ============ -->
-    <section id="activity" class="section activity">
+    <section id="activity" class="section activity reveal">
       <div class="section-inner">
         <h2 class="section-label">Activity</h2>
         <h3 class="section-title">GitHub contributions</h3>
-        <div class="activity-card">
+        <div class="activity-card" tabindex="0" role="region" aria-label="GitHub contribution chart, scrollable">
           <!-- src is the un-themed chart so it also works without JS; main.js re-sets it
                with the current --accent and swaps it again when the theme changes. -->
           <img id="activityChart" class="activity-chart" alt="GitHub contribution chart for aegisssc"
@@ -191,7 +195,7 @@
     </section>
 
     <!-- ============ Contact ============ -->
-    <section id="contact" class="section contact">
+    <section id="contact" class="section contact reveal">
       <div class="section-inner">
         <h2 class="section-label">Contact</h2>
         <h3 class="section-title section-title-big">Let's talk.</h3>

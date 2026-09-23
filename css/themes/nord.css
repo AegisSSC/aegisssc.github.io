@@ -68,10 +68,11 @@
   --surface-border: rgba(216, 222, 233, 0.10);
   --text: #ECEFF4;             /* nord6 */
   --text-dim: #D8DEE9;         /* nord4 */
-  --text-faint: #A5AFC0;       /* between nord3/nord4; 4.55:1 on surface */
+  --text-faint: #AEB8C7;       /* between nord3/nord4; 5.02:1 on surface */
   --accent: #88C0D0;           /* nord8 */
   --accent-2: #81A1C1;         /* nord9 - decorative/hover bg, not small text on surface */
   --accent-contrast: #2E3440;  /* text on accent buttons */
+  --pill-bg: #2E3440;          /* nord0: tag pills read as inset on a card */
   --success: #A3BE8C;          /* nord14 */
   --focus-ring: #88C0D0;
   --glow-1: rgba(136, 192, 208, 0.14);
@@ -90,9 +91,10 @@
   --text: #2E3440;             /* nord0 */
   --text-dim: #3B4252;         /* nord1 */
   --text-faint: #4C566A;       /* nord3 */
-  --accent: #4C6A92;           /* darkened nord10; 4.56:1 on surface */
+  --accent: #49658C;           /* darkened nord10; 4.89:1 on surface, 4.79:1 over the glow */
   --accent-2: #3E5778;         /* darker still, hover state */
   --accent-contrast: #ECEFF4;
+  --pill-bg: #ECEFF4;          /* nord6: tag pills read as inset on a card */
   --success: #4A7337;          /* darkened nord14 */
   --focus-ring: #5E81AC;       /* nord10 */
   --glow-1: rgba(94, 129, 172, 0.10);
@@ -112,9 +114,10 @@
     --text: #2E3440;
     --text-dim: #3B4252;
     --text-faint: #4C566A;
-    --accent: #4C6A92;
+    --accent: #49658C;
     --accent-2: #3E5778;
     --accent-contrast: #ECEFF4;
+    --pill-bg: #ECEFF4;
     --success: #4A7337;
     --focus-ring: #5E81AC;
     --glow-1: rgba(94, 129, 172, 0.10);
