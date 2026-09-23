@@ -801,18 +801,26 @@ a:hover .link-arrow {
   flex-shrink: 0;
 }
 
+/* Official brand-coloured <img> from cdn.simpleicons.org (js/main.js).
+   The size is fixed here and echoed by the width/height attributes, so the row
+   never reflows as the icons arrive and both tracks stay exactly as wide. */
 .tool-icon {
   display: block;
   width: 28px;
   height: 28px;
-  background: var(--text-dim);
-  -webkit-mask: var(--icon) center / contain no-repeat;
-  mask: var(--icon) center / contain no-repeat;
-  transition: background-color var(--ease);
+  object-fit: contain;
+  transition: transform var(--ease);
 }
 
+/* An icon that failed to load is hidden by main.js; without this the rule above
+   would out-specify the browser's own [hidden] { display: none }. */
+.tool-icon[hidden] {
+  display: none;
+}
+
+/* Colour is the brand's, so the hover cue is a nudge in size instead of a tint. */
 .tool:hover .tool-icon {
-  background: var(--accent);
+  transform: scale(1.12);
 }
 
 /* Name is for screen readers only (the icon + title tooltip carry it visually) */
@@ -1221,7 +1229,8 @@ a:hover .link-arrow {
 
   /* Hover effects stay, but nothing moves */
   .project-card:hover,
-  .skill-card:hover {
+  .skill-card:hover,
+  .tool:hover .tool-icon {
     transform: none;
   }
 

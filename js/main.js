@@ -314,7 +314,25 @@
   }
 
   // ---------- Tool marquee ----------
+  // Official brand colours: https://cdn.simpleicons.org/<slug> serves the icon in
+  // the brand's own colour and /<slug>/<hex> overrides it. An entry of SITE.tools
+  // may carry `dark`/`light` hex values (no '#') for the theme where its brand
+  // colour would disappear; the URLs are swapped when <html data-theme> changes.
   const ICON_CDN = 'https://cdn.simpleicons.org/';
+  const ICON_PX = 28;                                // matches .tool-icon in css/style.css
+  const ICON_HEX = /^(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
+  let toolIcons = [];                                // every <img> across both tracks
+  let cloneIcons = [];                               // the duplicate track's <img>s only
+
+  function toolOverride(tool, key) {
+    const raw = tool && typeof tool[key] === 'string' ? tool[key].trim().replace(/^#/, '') : '';
+    return ICON_HEX.test(raw) ? raw : '';
+  }
+
+  function toolIconSrc(img, theme) {
+    const color = img.getAttribute(theme === 'light' ? 'data-light' : 'data-dark');
+    return ICON_CDN + img.getAttribute('data-slug') + (color ? '/' + color : '');
+  }
 
   function buildToolTrack(tools) {
     const track = document.createElement('ul');
@@ -326,9 +344,21 @@
       const li = document.createElement('li');
       li.className = 'tool';
       li.title = tool.name;
-      const icon = document.createElement('span');
+
+      const icon = document.createElement('img');
       icon.className = 'tool-icon';
-      icon.style.setProperty('--icon', "url('" + ICON_CDN + encodeURIComponent(slug) + "')");
+      icon.width = ICON_PX;       // width/height attributes: the row holds its size
+      icon.height = ICON_PX;      // before the icons arrive, so nothing shifts
+      icon.loading = 'lazy';
+      icon.decoding = 'async';
+      icon.alt = '';              // decorative in both tracks: .tool-name carries the name
+      icon.setAttribute('data-slug', encodeURIComponent(slug));
+      const dark = toolOverride(tool, 'dark');
+      const light = toolOverride(tool, 'light');
+      if (dark) icon.setAttribute('data-dark', dark);
+      if (light) icon.setAttribute('data-light', light);
+      // src is set by updateToolIcons() once the theme is known.
+
       const name = document.createElement('span');
       name.className = 'tool-name';
       name.textContent = tool.name;
@@ -339,18 +369,67 @@
     return track;
   }
 
+  function onToolIconError(event) {
+    // No broken-image glyph. Both tracks hold the same URLs, so they hide alike
+    // and the two tracks keep the same width.
+    const img = event.currentTarget;
+    if (img) img.hidden = true;
+  }
+
+  // The duplicate track starts past the marquee's right edge, where overflow
+  // hides it, so its lazy images may never intersect anything and would stay
+  // blank — a visible gap once the loop reaches them. As soon as the first
+  // track has an icon, switch the copies to eager: identical URLs, so they come
+  // straight from the cache without a second request.
+  function wakeCloneIcons() {
+    for (let i = 0; i < cloneIcons.length; i++) cloneIcons[i].loading = 'eager';
+    cloneIcons = [];
+  }
+
+  function onToolIconLoad(event) {
+    // A re-coloured icon can succeed after an earlier one failed.
+    const img = event.currentTarget;
+    if (img) img.hidden = false;
+    if (cloneIcons.length) wakeCloneIcons();
+  }
+
+  function updateToolIcons() {
+    const theme = currentTheme();
+    for (let i = 0; i < toolIcons.length; i++) {
+      const img = toolIcons[i];
+      const src = toolIconSrc(img, theme);
+      // Compare against the resolved URL so an unchanged icon is never re-requested.
+      if (img.src === src) continue;
+      img.src = src;
+    }
+  }
+
   function initToolMarquee() {
     const marquee = document.getElementById('toolMarquee');
     const s = site();
     if (!marquee || !s || !Array.isArray(s.tools) || !s.tools.length) return;
     const track = buildToolTrack(s.tools);
     if (!track.children.length) return;
-    // Second copy makes the -100% loop seamless; hidden from assistive tech.
+    // Second copy makes the -100% loop seamless; hidden from assistive tech, so
+    // the first track stays the only one that names a tool.
     const clone = track.cloneNode(true);
     clone.setAttribute('aria-hidden', 'true');
     marquee.textContent = '';
     marquee.appendChild(track);
     marquee.appendChild(clone);
+
+    // Collected after the clone exists: cloneNode() copies attributes, not listeners.
+    toolIcons = Array.prototype.slice.call(marquee.querySelectorAll('img.tool-icon'));
+    cloneIcons = Array.prototype.slice.call(clone.querySelectorAll('img.tool-icon'));
+    for (let i = 0; i < toolIcons.length; i++) {
+      toolIcons[i].addEventListener('error', onToolIconError);
+      toolIcons[i].addEventListener('load', onToolIconLoad);
+    }
+    updateToolIcons();
+    // Re-colour on theme change (same idea as the activity chart).
+    if (!window.MutationObserver) return;
+    const observer = new MutationObserver(updateToolIcons);
+    observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
   }
 
   // ---------- Globe loader ----------

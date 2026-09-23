@@ -1,0 +1,5 @@
+# https://aegisssc.github.io
+User-agent: *
+Allow: /
+
+Sitemap: https://aegisssc.github.io/sitemap.xml

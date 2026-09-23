@@ -44,12 +44,27 @@ window.SITE = {
     linkedin: '',               // TBD — empty string = hidden
     email: '',                  // TBD — empty string = hidden
   },
-  tools: [                      // TBD — slug = https://simpleicons.org slug
-    { name: 'Git', slug: 'git' }, { name: 'GitHub', slug: 'github' },
-    { name: 'Linux', slug: 'linux' }, { name: 'Python', slug: 'python' },
-    { name: 'JavaScript', slug: 'javascript' }, { name: 'HTML5', slug: 'html5' },
-    { name: 'CSS', slug: 'css' }, { name: 'Docker', slug: 'docker' },
-    { name: 'VS Code', slug: 'vscodium' }, { name: 'Bash', slug: 'gnubash' },
+  // Tools carousel. Each icon is the OFFICIAL brand-coloured mark served by
+  // https://cdn.simpleicons.org/<slug>; adding /<hex> after the slug recolours it.
+  //   name  (required) accessible name + hover tooltip
+  //   slug  (required) the https://simpleicons.org slug
+  //   dark  (optional) hex WITHOUT '#', used only in the dark theme
+  //   light (optional) hex WITHOUT '#', used only in the light theme
+  // Icons keep their official brand colour. Set dark/light ONLY where a logo
+  // would otherwise be invisible against that theme's background (GitHub's
+  // near-black mark on the dark theme is the one real case).
+  // js/main.js swaps the URLs whenever <html data-theme> changes.
+  tools: [
+    { name: 'Git', slug: 'git' },                        // #F03C2E
+    { name: 'GitHub', slug: 'github', dark: 'ECEFF4' },  // #181717 is invisible on the dark bg
+    { name: 'Linux', slug: 'linux' },                    // #FCC624
+    { name: 'Python', slug: 'python' },                  // #3776AB
+    { name: 'JavaScript', slug: 'javascript' },          // #F7DF1E
+    { name: 'HTML5', slug: 'html5' },                    // #E34F26
+    { name: 'CSS', slug: 'css' },                        // #663399
+    { name: 'Docker', slug: 'docker' },                  // #2496ED
+    { name: 'VS Code', slug: 'vscodium' },               // #2F80ED
+    { name: 'Bash', slug: 'gnubash' },                   // #4EAA25
   ],
   // About: 3-5 sentences. TBD - replace with the owner's own words.
   about: [
