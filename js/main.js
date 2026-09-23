@@ -761,8 +761,8 @@
       cell.className = 'activity-day';
       cell.dataset.level = String(Math.max(0, Math.min(4, Number(day.level) || 0)));
       const when = new Date(day.date + 'T00:00:00');
-      cell.title = count + (count === 1 ? ' contribution on ' : ' contributions on ') +
-        DAY_NAMES[when.getDay()] + ', ' + day.date;
+      cell.dataset.tip = (count || 'No') + (count === 1 ? ' contribution' : ' contributions') +
+        ' on ' + DAY_NAMES[when.getDay()] + ', ' + day.date;
       grid.appendChild(cell);
     });
 
@@ -804,6 +804,44 @@
       row.appendChild(cell);
     });
     return row;
+  }
+
+  // One tooltip for the whole grid, positioned over the hovered square.
+  // A native title= would work but appears after a delay and ignores the theme.
+  function attachActivityTooltip(wrap, grid) {
+    const tip = document.createElement('div');
+    tip.className = 'activity-tip';
+    tip.setAttribute('role', 'status');
+    tip.hidden = true;
+    wrap.appendChild(tip);
+
+    function show(cell) {
+      const text = cell && cell.dataset ? cell.dataset.tip : '';
+      if (!text) return hide();
+      tip.textContent = text;
+      tip.hidden = false;
+      // Place it above the square, then keep it inside the grid's own box.
+      const half = tip.offsetWidth / 2;
+      const centre = cell.offsetLeft + cell.offsetWidth / 2;
+      const limit = Math.max(half, grid.offsetWidth - half);
+      tip.style.left = Math.min(Math.max(centre, half), limit) + 'px';
+      tip.style.top = cell.offsetTop + 'px';
+    }
+
+    function hide() {
+      tip.hidden = true;
+    }
+
+    grid.addEventListener('pointerover', function (event) {
+      const cell = event.target.closest ? event.target.closest('.activity-day') : null;
+      if (cell && !cell.classList.contains('is-pad')) show(cell);
+      else hide();
+    });
+    grid.addEventListener('pointerleave', hide);
+    // Touch: a tap lands as pointerover, so let the next tap elsewhere dismiss it.
+    document.addEventListener('pointerdown', function (event) {
+      if (!grid.contains(event.target)) hide();
+    });
   }
 
   function buildActivityLegend() {
@@ -851,8 +889,12 @@
         if (!card) return;
         const leadingPad = new Date(days[0].date + 'T00:00:00').getDay();
         const grid = buildActivityGrid(days, activityUser);
-        card.insertBefore(buildActivityMonths(days, leadingPad), img);
-        card.insertBefore(grid, img);
+        const wrap = document.createElement('div');
+        wrap.className = 'activity-plot';
+        wrap.appendChild(buildActivityMonths(days, leadingPad));
+        wrap.appendChild(grid);
+        attachActivityTooltip(wrap, grid);
+        card.insertBefore(wrap, img);
         card.insertBefore(buildActivityLegend(), img.nextSibling);
         activityGridReady = true;
         img.hidden = true;   // the hosted image was only ever the fallback

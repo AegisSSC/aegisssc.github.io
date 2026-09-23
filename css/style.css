@@ -1127,6 +1127,30 @@ a:hover .link-arrow {
 .activity-day[data-level="3"] { background: var(--accent); opacity: 0.85; border-color: transparent; }
 .activity-day[data-level="4"] { background: var(--accent); opacity: 1; border-color: transparent; }
 
+.activity-plot {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* Day tooltip: follows the hovered square, styled like the globe's label. */
+.activity-tip {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, calc(-100% - 6px));
+  padding: 4px 10px;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 .activity-legend {
   display: flex;
   align-items: center;
