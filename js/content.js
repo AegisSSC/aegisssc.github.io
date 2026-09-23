@@ -11,12 +11,12 @@ window.SITE = {
   location: [48.2082, 16.3738], // [lat, lon] globe center + home node (red)
   // Other anchor points of the globe web. Each is linked to home by a spoke,
   // and neighbors (by direction from home) are linked by the web's threads.
-  // style: 'gold' = gold-to-yellow node; omit for the accent color.
+  // style: 'highlight' = larger ring node in --globe-mark-*; omit for a plain accent dot.
   // size: optional node size multiplier (1 = normal).
   anchors: [
     { name: 'Hyderabad, India', location: [17.385, 78.4867] },
     { name: 'Tokyo, Japan', location: [35.6762, 139.6503] },
-    { name: 'Greenville, SC, USA', location: [34.8526, -82.394], style: 'gold' },
+    { name: 'Greenville, SC, USA', location: [34.8526, -82.394], style: 'highlight' },
     { name: 'Augusta, GA, USA', location: [33.4735, -82.0105] },
     { name: 'Huntington Beach, CA, USA', location: [33.6603, -117.9992] },
     { name: 'Toronto, Canada', location: [43.6532, -79.3832] },

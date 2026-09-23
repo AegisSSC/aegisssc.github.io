@@ -117,8 +117,8 @@ function readWebColors() {
     line: token('--accent', '#88C0D0'),
     node: token('--accent', '#88C0D0'),
     hub: token('--globe-hub', '#BF616A'),
-    goldFrom: token('--globe-gold-from', '#C9962B'),
-    goldTo: token('--globe-gold-to', '#EBCB8B'),
+    markFrom: token('--globe-mark-from', token('--globe-gold-from', '#C9962B')),
+    markTo: token('--globe-mark-to', token('--globe-gold-to', '#EBCB8B')),
     outline: token('--bg', '#2E3440'),
   };
 }
@@ -159,9 +159,9 @@ function buildWeb(location, anchors, homeName) {
     .map((a) => ({
       vec: toVec(a.location),
       name: a.name || '',
-      gold: a.style === 'gold',
+      mark: a.style === 'highlight' || a.style === 'gold',
       // Optional size multiplier; gold nodes default slightly larger.
-      size: a.size > 0 ? a.size : (a.style === 'gold' ? 1.4 : 1),   // ring needs a little more room
+      size: a.size > 0 ? a.size : (a.style === 'highlight' || a.style === 'gold' ? 1.4 : 1),   // ring needs a little more room
       angle: bearing(location, a.location),
     }))
     .sort((a, b) => a.angle - b.angle);
@@ -223,9 +223,8 @@ function drawWeb(ctx, web, colors, phi, theta, zoom, now, reducedMotion) {
   // Nodes: on the surface, so they fade out as they reach the rim.
   // Each drawn node is recorded (canvas px) for hover hit-testing.
   const hits = [];
-  // ring: draw the node as an open circle instead of a filled dot, so it is
-  // told apart by shape as well as colour (red, gold and the accent orange
-  // converge under red-green colour blindness).
+  // ring: draw the node as an open circle instead of a filled dot, so the
+  // highlighted city is told apart by shape as well as colour.
   function node(vec, radius, fill, name, ring) {
     const p = toScreen(vec, phi, theta);
     const a = clamp01(p[2] / 0.12);
@@ -264,18 +263,18 @@ function drawWeb(ctx, web, colors, phi, theta, zoom, now, reducedMotion) {
   const nodeR = Math.max(3, unit * 4);
   web.nodes.forEach((n) => {
     const radius = nodeR * n.size;
-    const fill = n.gold
+    const fill = n.mark
       ? (x, y) => {
         const g = ctx.createRadialGradient(x, y, 0, x, y, radius);
-        g.addColorStop(0, colors.goldFrom);
-        g.addColorStop(1, colors.goldTo);
+        g.addColorStop(0, colors.markFrom);
+        g.addColorStop(1, colors.markTo);
         return g;
       }
       : colors.node;
-    node(n.vec, radius, fill, n.name, n.gold);
+    node(n.vec, radius, fill, n.name, n.mark);
   });
 
-  // Home: red, with a halo that pulses (static under reduced motion).
+  // Home: --globe-hub, with a halo that pulses (static under reduced motion).
   const homeR = nodeR * 1.5;
   const at = node(web.home, homeR, colors.hub, web.homeName);
   if (at) {

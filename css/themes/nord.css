@@ -54,8 +54,8 @@
 
   /* Globe web (js/globe.js). Spokes and ordinary nodes use --accent. */
   --globe-hub: #BF616A;        /* nord11: home node (Vienna) */
-  --globe-gold-from: #C9962B;  /* gold node gradient, center */
-  --globe-gold-to: #EBCB8B;    /* nord13: gold node gradient, edge */
+  --globe-mark-from: #C9962B;  /* highlighted node gradient, center */
+  --globe-mark-to: #EBCB8B;    /* nord13: highlighted node gradient, edge */
 }
 
 /* --- Dark (default) ------------------------------------------------------- */

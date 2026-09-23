@@ -90,9 +90,9 @@
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   --nav-bg: rgba(22, 23, 32, 0.75);
   /* Globe web: nodes sit on the dark sphere */
-  --globe-hub: #FF5757;        /* home node (Vienna) */
-  --globe-gold-from: #F58F00;  /* gold node, center */
-  --globe-gold-to: #FFB957;    /* gold node, edge */
+  --globe-hub: #7FC4FF;        /* home node (Vienna); 6.60:1 on the sphere */
+  --globe-mark-from: #8B4FD8;  /* highlighted node, center */
+  --globe-mark-to: #A468E8;    /* highlighted node, edge; 3.36:1 on the sphere */
   --globe-base: #323441;  /* ink3 */
 }
 
@@ -117,9 +117,9 @@
   --shadow: 0 10px 30px rgba(24, 26, 37, 0.10);
   --nav-bg: rgba(248, 248, 250, 0.80);
   /* Globe web: darkened so the nodes stay visible on a light sphere */
-  --globe-hub: #FF2020;        /* home node (Vienna); 3.23:1 on the sphere */
-  --globe-gold-from: #A55F00;  /* gold node, center */
-  --globe-gold-to: #BB6D00;    /* gold node, edge; 3.33:1 on the sphere */
+  --globe-hub: #1E6FD0;        /* home node (Vienna); 4.17:1 on the sphere */
+  --globe-mark-from: #4A2875;  /* highlighted node, center */
+  --globe-mark-to: #5E3391;    /* highlighted node, edge; 7.49:1 on the sphere */
   --globe-base: #EBEBF0;  /* paper2 */
 }
 
@@ -145,9 +145,9 @@
     --shadow: 0 10px 30px rgba(24, 26, 37, 0.10);
     --nav-bg: rgba(248, 248, 250, 0.80);
   /* Globe web: darkened so the nodes stay visible on a light sphere */
-    --globe-hub: #FF2020;        /* home node (Vienna); 3.23:1 on the sphere */
-    --globe-gold-from: #A55F00;  /* gold node, center */
-    --globe-gold-to: #BB6D00;    /* gold node, edge; 3.33:1 on the sphere */
+    --globe-hub: #1E6FD0;        /* home node (Vienna); 4.17:1 on the sphere */
+    --globe-mark-from: #4A2875;  /* highlighted node, center */
+    --globe-mark-to: #5E3391;    /* highlighted node, edge; 7.49:1 on the sphere */
     --globe-base: #EBEBF0;  /* paper2 */
   }
 }
