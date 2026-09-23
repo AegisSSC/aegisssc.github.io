@@ -1,4 +1,5 @@
-// Site content. Edit this file to change what the page shows. (M3 adds projects, skills, jobs.)
+// Site content. Edit this file to change what the page shows.
+// (M3 adds about, projects, skills and the GitHub handle for the activity chart.)
 window.SITE = {
   name: 'Your Name',            // TBD
   initials: 'YN',               // TBD
@@ -50,4 +51,69 @@ window.SITE = {
     { name: 'CSS', slug: 'css' }, { name: 'Docker', slug: 'docker' },
     { name: 'VS Code', slug: 'vscodium' }, { name: 'Bash', slug: 'gnubash' },
   ],
+  // About: 3-5 sentences. TBD - replace with the owner's own words.
+  about: [
+    'TBD: a short paragraph about who you are and what you build.',
+    'TBD: a second paragraph — what you are working on or learning now.',
+  ],
+  // Hand-picked projects, in the order they appear on the page.
+  // To change what Projects shows, edit this list — nothing else needs to change.
+  //   name  (required) card title
+  //   blurb (optional) one or two sentences
+  //   url   (optional) link target; LEAVE IT OUT for private or unreleased work
+  //                    and the card renders as plain text instead of a link
+  //   tags  (optional) small pills, e.g. ['Rust', 'Private']
+  projects: [
+    {
+      name: 'city-gen-rs',
+      blurb: 'TBD: a procedural city generator in Rust.',
+      url: 'https://github.com/AegisSSC/city-gen-rs',
+      tags: ['Rust', 'Procedural generation'],
+    },
+    // Example of private work with no link (delete or edit):
+    // {
+    //   name: 'TBD private project',
+    //   blurb: 'TBD: what it does, without giving away anything private.',
+    //   tags: ['Private', 'Rust'],
+    // },
+    {
+      name: 'huffman-rs',
+      blurb: 'The Huffman compression algorithm implemented from scratch in Rust.',
+      url: 'https://github.com/AegisSSC/huffman-rs',
+      tags: ['Rust', 'Algorithms', 'Compression'],
+    },
+    {
+      name: 'TigerTownBlog',
+      blurb: 'A SvelteKit blog powered by Markdown, built to carry the writing for ongoing projects.',
+      url: 'https://github.com/AegisSSC/TigerTownBlog',
+      tags: ['SvelteKit', 'TypeScript', 'Markdown'],
+    },
+    {
+      name: 'C-UI-Task-Management',
+      blurb: 'A task-management desktop app written entirely in C, drawing its own interface with OpenGL.',
+      url: 'https://github.com/AegisSSC/C-UI-Task-Management',
+      tags: ['C', 'OpenGL', 'Desktop UI'],
+    },
+    {
+      name: 'RustyDS',
+      blurb: 'Data science in Rust with Linfa — a growing set of worked examples.',
+      url: 'https://github.com/AegisSSC/RustyDS',
+      tags: ['Rust', 'Linfa', 'Data science'],
+    },
+    {
+      name: 'Stock_Market_Analysis',
+      blurb: 'A side project analysing historical market data in Python.',
+      url: 'https://github.com/AegisSSC/Stock_Market_Analysis',
+      tags: ['Python', 'Pandas', 'Analysis'],
+    },
+  ],
+  // Skill groups. TBD - drafted from the repos above; the owner should correct these.
+  skills: [
+    { group: 'Languages', items: ['Rust', 'Python', 'C', 'TypeScript', 'JavaScript', 'Lua'] },
+    { group: 'Web', items: ['SvelteKit', 'HTML', 'CSS', 'Markdown'] },
+    { group: 'Data', items: ['Pandas', 'Linfa', 'Jupyter'] },
+    { group: 'Systems & tools', items: ['Linux', 'Git', 'Neovim', 'OpenGL'] },
+  ],
+  // GitHub contribution chart (Activity section).
+  github: 'aegisssc',
 };

@@ -47,7 +47,6 @@
         <li><a href="#home">Home</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#skills">Skills</a></li>
-        <li><a href="#experience">Experience</a></li>
         <li><a href="#activity">Activity</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -72,8 +71,6 @@
       <li><a href="#home">Home</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#skills">Skills</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#education">Education</a></li>
       <li><a href="#activity">Activity</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -135,7 +132,10 @@
       <div class="section-inner">
         <h2 class="section-label">About</h2>
         <h3 class="section-title">A bit about me</h3>
-        <div class="placeholder">Short bio and background — M3</div>
+        <!-- Static fallback; main.js rebuilds this from SITE.about -->
+        <div class="about-text" id="aboutText">
+          <p>TBD: a short paragraph about who you are and what you build.</p>
+        </div>
       </div>
     </section>
 
@@ -145,7 +145,11 @@
         <h2 class="section-label">Projects</h2>
         <h3 class="section-title">Things I've built</h3>
         <div id="projectsGrid" class="projects-grid">
-          <div class="placeholder">Hand-picked project cards — M3</div>
+          <!-- Static fallback (one card); main.js rebuilds the grid from SITE.projects -->
+          <a class="project-card" href="https://github.com/aegisssc" target="_blank" rel="noopener">
+            <h4 class="project-name">Projects on GitHub <span class="link-arrow" aria-hidden="true">↗</span></h4>
+            <p class="project-blurb">Browse the repositories directly on GitHub.</p>
+          </a>
         </div>
       </div>
     </section>
@@ -155,25 +159,18 @@
       <div class="section-inner">
         <h2 class="section-label">Skills</h2>
         <h3 class="section-title">What I build with</h3>
-        <div class="placeholder">Languages, frameworks and tools — M3</div>
-      </div>
-    </section>
-
-    <!-- ============ Experience ============ -->
-    <section id="experience" class="section experience">
-      <div class="section-inner">
-        <h2 class="section-label">Experience</h2>
-        <h3 class="section-title">Where I've worked</h3>
-        <div class="placeholder">Work history timeline (optional) — M3</div>
-      </div>
-    </section>
-
-    <!-- ============ Education ============ -->
-    <section id="education" class="section education">
-      <div class="section-inner">
-        <h2 class="section-label">Education</h2>
-        <h3 class="section-title">Where I've studied</h3>
-        <div class="placeholder">Schools and degrees (optional) — M3</div>
+        <!-- Static fallback (one card); main.js rebuilds the grid from SITE.skills -->
+        <div class="skills-grid" id="skillsGrid">
+          <div class="skill-card">
+            <h4 class="skill-group">Languages</h4>
+            <ul class="tags">
+              <li class="tag">Rust</li>
+              <li class="tag">Python</li>
+              <li class="tag">C</li>
+              <li class="tag">TypeScript</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -182,7 +179,14 @@
       <div class="section-inner">
         <h2 class="section-label">Activity</h2>
         <h3 class="section-title">GitHub contributions</h3>
-        <div class="placeholder">GitHub contribution graph — M3</div>
+        <div class="activity-card">
+          <!-- src is the un-themed chart so it also works without JS; main.js re-sets it
+               with the current --accent and swaps it again when the theme changes. -->
+          <img id="activityChart" class="activity-chart" alt="GitHub contribution chart for aegisssc"
+               loading="lazy" decoding="async" src="https://ghchart.rshah.org/aegisssc" width="663" height="104">
+          <p class="activity-fallback" hidden>Contribution chart unavailable — see the GitHub profile.</p>
+          <a class="see-all" href="https://github.com/aegisssc" target="_blank" rel="noopener">View GitHub profile <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
       </div>
     </section>
 
@@ -192,8 +196,12 @@
         <h2 class="section-label">Contact</h2>
         <h3 class="section-title section-title-big">Let's talk.</h3>
         <p class="contact-text">TBD: a sentence inviting people to get in touch.</p>
-        <!-- TBD: real email address -->
-        <a href="mailto:TBD@example.com" class="btn btn-primary">Say hello <span class="arrow" aria-hidden="true">→</span></a>
+        <!-- main.js points this at mailto:SITE.links.email, or at GitHub while the email is TBD -->
+        <a id="contactPrimary" class="btn btn-primary" href="https://github.com/aegisssc" target="_blank" rel="noopener">Find me on GitHub <span class="arrow" aria-hidden="true">→</span></a>
+        <!-- Static fallback; main.js rebuilds this list from SITE.links -->
+        <ul class="contact-links" id="contactLinks">
+          <li><a href="https://github.com/aegisssc" target="_blank" rel="noopener">GitHub <span class="link-arrow" aria-hidden="true">↗</span></a></li>
+        </ul>
       </div>
     </section>
   </main>
@@ -210,19 +218,15 @@
           <li><a href="#home">Home</a></li>
           <li><a href="#projects">Projects</a></li>
           <li><a href="#skills">Skills</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#education">Education</a></li>
           <li><a href="#activity">Activity</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h2 class="footer-heading">Contact</h2>
-        <!-- TBD: real links -->
-        <ul>
-          <li><a href="mailto:TBD@example.com">Email (TBD)</a></li>
+        <!-- Static fallback; main.js rebuilds this list from SITE.links (email + LinkedIn are TBD) -->
+        <ul id="footerLinks">
           <li><a href="https://github.com/aegisssc" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="#">LinkedIn (TBD)</a></li>
         </ul>
       </div>
     </div>

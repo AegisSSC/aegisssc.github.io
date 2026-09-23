@@ -1,5 +1,6 @@
 /* main.js: theme toggle, mobile nav, scrolled header, footer year,
-   SITE data binding, local clock, connect links, tool marquee, globe loader.
+   SITE data binding, local clock, connect links, tool marquee, globe loader,
+   and the M3 content renderers (about, projects, skills, activity chart, contact).
    Plain ES2017, no dependencies (globe.js is lazy-loaded). Every DOM lookup is null-safe. */
 (function () {
   'use strict';
@@ -262,15 +263,22 @@
     return value;
   }
 
-  function initConnectLinks() {
-    const list = document.getElementById('connectLinks');
-    const s = site();
-    if (!list || !s || !s.links || typeof s.links !== 'object') return;
+  function linkArrow() {
+    const arrow = document.createElement('span');
+    arrow.className = 'link-arrow';
+    arrow.setAttribute('aria-hidden', 'true');
+    arrow.textContent = '↗';
+    return arrow;
+  }
 
+  // One <li><a> per configured entry of SITE.links. Empty entries are skipped.
+  function buildSiteLinks(withArrow) {
+    const s = site();
+    const links = s && s.links && typeof s.links === 'object' ? s.links : null;
     const fragment = document.createDocumentFragment();
-    let count = 0;
+    if (!links) return fragment;
     CONNECT_LINKS.forEach(function (link) {
-      const value = s.links[link.key];
+      const value = links[link.key];
       if (typeof value !== 'string' || !value.trim()) return;
       const li = document.createElement('li');
       const a = document.createElement('a');
@@ -279,19 +287,29 @@
         a.target = '_blank';
         a.rel = 'noopener';
       }
-      a.appendChild(document.createTextNode(link.label + ' '));
-      const arrow = document.createElement('span');
-      arrow.className = 'link-arrow';
-      arrow.setAttribute('aria-hidden', 'true');
-      arrow.textContent = '↗';
-      a.appendChild(arrow);
+      if (withArrow) {
+        a.appendChild(document.createTextNode(link.label + ' '));
+        a.appendChild(linkArrow());
+      } else {
+        a.textContent = link.label;
+      }
       li.appendChild(a);
       fragment.appendChild(li);
-      count++;
     });
-    if (!count) return; // nothing configured: keep the static fallback
+    return fragment;
+  }
+
+  // Replaces a list's static fallback only when there is something to show.
+  function fillLinkList(list, withArrow) {
+    if (!list) return;
+    const fragment = buildSiteLinks(withArrow);
+    if (!fragment.childNodes.length) return; // nothing configured: keep the static fallback
     list.textContent = '';
     list.appendChild(fragment);
+  }
+
+  function initConnectLinks() {
+    fillLinkList(document.getElementById('connectLinks'), true);
   }
 
   // ---------- Tool marquee ----------
@@ -394,6 +412,223 @@
     observer.observe(wrap);
   }
 
+  // ---------- About ----------
+  function siteArray(key) {
+    const s = site();
+    const value = s ? s[key] : null;
+    return Array.isArray(value) ? value : null;
+  }
+
+  function initAbout() {
+    const holder = document.getElementById('aboutText');
+    const paragraphs = siteArray('about');
+    if (!holder || !paragraphs) return;
+
+    const fragment = document.createDocumentFragment();
+    paragraphs.forEach(function (text) {
+      if (typeof text !== 'string' || !text.trim()) return;
+      const p = document.createElement('p');
+      p.textContent = text.trim();
+      fragment.appendChild(p);
+    });
+    if (!fragment.childNodes.length) return; // keep the static fallback
+    holder.textContent = '';
+    holder.appendChild(fragment);
+  }
+
+  // ---------- Tag lists ----------
+  function buildTags(items) {
+    const list = document.createElement('ul');
+    list.className = 'tags';
+    if (!Array.isArray(items)) return list;
+    items.forEach(function (item) {
+      if (typeof item !== 'string' || !item.trim()) return;
+      const li = document.createElement('li');
+      li.className = 'tag';
+      li.textContent = item.trim();
+      list.appendChild(li);
+    });
+    return list;
+  }
+
+  // ---------- Projects ----------
+  function buildProjectCard(project) {
+    if (!project || typeof project !== 'object') return null;
+    const name = typeof project.name === 'string' ? project.name.trim() : '';
+    const url = typeof project.url === 'string' ? project.url.trim() : '';
+    if (!name) return null;
+    // A project with no (public) link renders as a plain card instead of a link.
+    const linked = /^https?:\/\//i.test(url);
+
+    const card = document.createElement(linked ? 'a' : 'div');
+    card.className = linked ? 'project-card' : 'project-card is-static';
+    if (linked) {
+      card.href = url;
+      card.target = '_blank';
+      card.rel = 'noopener';
+    }
+
+    const heading = document.createElement('h4');
+    heading.className = 'project-name';
+    heading.appendChild(document.createTextNode(name + (linked ? ' ' : '')));
+    if (linked) heading.appendChild(linkArrow());
+    card.appendChild(heading);
+
+    if (typeof project.blurb === 'string' && project.blurb.trim()) {
+      const blurb = document.createElement('p');
+      blurb.className = 'project-blurb';
+      blurb.textContent = project.blurb.trim();
+      card.appendChild(blurb);
+    }
+
+    const tags = buildTags(project.tags);
+    if (tags.children.length) card.appendChild(tags);
+    return card;
+  }
+
+  function initProjects() {
+    const grid = document.getElementById('projectsGrid');
+    const projects = siteArray('projects');
+    if (!grid || !projects) return;
+
+    const fragment = document.createDocumentFragment();
+    projects.forEach(function (project) {
+      const card = buildProjectCard(project);
+      if (card) fragment.appendChild(card);
+    });
+    if (!fragment.childNodes.length) return; // keep the static fallback card
+    grid.textContent = '';
+    grid.appendChild(fragment);
+  }
+
+  // ---------- Skills ----------
+  function buildSkillCard(entry) {
+    if (!entry || typeof entry !== 'object') return null;
+    const group = typeof entry.group === 'string' ? entry.group.trim() : '';
+    if (!group) return null;
+    const tags = buildTags(entry.items);
+    if (!tags.children.length) return null;
+
+    const card = document.createElement('div');
+    card.className = 'skill-card';
+    const heading = document.createElement('h4');
+    heading.className = 'skill-group';
+    heading.textContent = group;
+    card.appendChild(heading);
+    card.appendChild(tags);
+    return card;
+  }
+
+  function initSkills() {
+    const grid = document.getElementById('skillsGrid');
+    const skills = siteArray('skills');
+    if (!grid || !skills) return;
+
+    const fragment = document.createDocumentFragment();
+    skills.forEach(function (entry) {
+      const card = buildSkillCard(entry);
+      if (card) fragment.appendChild(card);
+    });
+    if (!fragment.childNodes.length) return; // keep the static fallback card
+    grid.textContent = '';
+    grid.appendChild(fragment);
+  }
+
+  // ---------- Activity (GitHub contribution chart) ----------
+  const CHART_BASE = 'https://ghchart.rshah.org/';
+  let activityChart = null;
+  let activityUser = '';
+
+  function accentHex() {
+    const raw = getComputedStyle(root).getPropertyValue('--accent').trim();
+    const match = /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec(raw);
+    if (!match) return null;
+    let hex = match[1].toLowerCase();
+    if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    return hex;
+  }
+
+  function activitySrc() {
+    const hex = accentHex();
+    return CHART_BASE + (hex ? hex + '/' : '') + encodeURIComponent(activityUser);
+  }
+
+  function updateActivityChart() {
+    if (!activityChart) return;
+    const src = activitySrc();
+    // Compare against the resolved URL so we never re-request the same chart.
+    if (activityChart.src === src) return;
+    activityChart.src = src;
+  }
+
+  function activityFallback() {
+    return document.querySelector('.activity-card .activity-fallback');
+  }
+
+  function onActivityChartError() {
+    if (activityChart) activityChart.hidden = true;
+    const fallback = activityFallback();
+    if (fallback) fallback.hidden = false;
+  }
+
+  function onActivityChartLoad() {
+    // A later (re-coloured) chart can succeed after an earlier one failed.
+    if (activityChart) activityChart.hidden = false;
+    const fallback = activityFallback();
+    if (fallback) fallback.hidden = true;
+  }
+
+  function initActivity() {
+    const img = document.getElementById('activityChart');
+    const user = siteString('github');
+    if (!img || !user || !/^[A-Za-z0-9-]+$/.test(user.trim())) return;
+    activityChart = img;
+    activityUser = user.trim();
+    img.addEventListener('error', onActivityChartError);
+    img.addEventListener('load', onActivityChartLoad);
+    updateActivityChart();
+    // Re-colour the chart when the theme changes (--accent differs per theme).
+    if (!window.MutationObserver) return;
+    const observer = new MutationObserver(updateActivityChart);
+    observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  }
+
+  // ---------- Contact ----------
+  function initContact() {
+    const primary = document.getElementById('contactPrimary');
+    const s = site();
+    const links = s && s.links && typeof s.links === 'object' ? s.links : null;
+
+    if (primary && links) {
+      const email = typeof links.email === 'string' ? links.email.trim() : '';
+      const github = typeof links.github === 'string' ? links.github.trim() : '';
+      let label = null;
+      if (email) {
+        primary.href = connectHref('email', email);
+        primary.removeAttribute('target');
+        primary.removeAttribute('rel');
+        label = 'Say hello';
+      } else if (github) {
+        primary.href = github;
+        primary.target = '_blank';
+        primary.rel = 'noopener';
+        label = 'Find me on GitHub';
+      }
+      if (label) {
+        primary.textContent = '';
+        primary.appendChild(document.createTextNode(label + ' '));
+        const arrow = document.createElement('span');
+        arrow.className = 'arrow';
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = '→';
+        primary.appendChild(arrow);
+      }
+    }
+
+    fillLinkList(document.getElementById('contactLinks'), true);
+    fillLinkList(document.getElementById('footerLinks'), false);
+  }
+
   // ---------- Init ----------
   function init() {
     themeToggle = document.getElementById('themeToggle');
@@ -405,7 +640,8 @@
     initScrolledHeader();
     initFooterYear();
     // M2: each step is isolated so one failure never blocks the rest.
-    [initSiteText, initClock, initConnectLinks, initToolMarquee, initGlobe].forEach(function (step) {
+    [initSiteText, initClock, initConnectLinks, initToolMarquee, initGlobe,
+      initAbout, initProjects, initSkills, initActivity, initContact].forEach(function (step) {
       try {
         step();
       } catch (e) {
