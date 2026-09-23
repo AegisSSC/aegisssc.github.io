@@ -688,6 +688,7 @@
   const CHART_BASE = 'https://ghchart.rshah.org/';
   let activityChart = null;
   let activityUser = '';
+  let activityGridReady = false;   // once the grid is drawn, the image stays gone
 
   function accentHex() {
     const raw = getComputedStyle(root).getPropertyValue('--accent').trim();
@@ -704,7 +705,7 @@
   }
 
   function updateActivityChart() {
-    if (!activityChart) return;
+    if (!activityChart || activityGridReady) return;
     const src = activitySrc();
     // Compare against the resolved URL so we never re-request the same chart.
     if (activityChart.src === src) return;
@@ -718,10 +719,15 @@
   function onActivityChartError() {
     if (activityChart) activityChart.hidden = true;
     const fallback = activityFallback();
-    if (fallback) fallback.hidden = false;
+    if (fallback && !activityGridReady) fallback.hidden = false;
   }
 
   function onActivityChartLoad() {
+    // A re-coloured image must not reappear on top of the grid that replaced it.
+    if (activityGridReady) {
+      if (activityChart) activityChart.hidden = true;
+      return;
+    }
     // A later (re-coloured) chart can succeed after an earlier one failed.
     if (activityChart) activityChart.hidden = false;
     const fallback = activityFallback();
@@ -783,10 +789,17 @@
       else last.end = column;
     });
 
+    // A week column can hold the end of one month and the start of the next,
+    // so trim each span to start after the previous one: overlapping spans get
+    // pushed onto a second row by grid auto-placement.
+    let placed = 0;
     spans.forEach(function (span) {
-      const width = span.end - span.start + 1;
+      const start = Math.max(span.start, placed + 1);
+      const width = span.end - start + 1;
+      if (width < 1) return;
+      placed = span.end;
       const cell = document.createElement('span');
-      cell.style.gridColumn = span.start + ' / span ' + width;
+      cell.style.gridColumn = start + ' / span ' + width;
       if (width >= 3) cell.textContent = MONTHS[span.month];
       row.appendChild(cell);
     });
@@ -817,10 +830,12 @@
     img.addEventListener('error', onActivityChartError);
     img.addEventListener('load', onActivityChartLoad);
     updateActivityChart();
-    // Re-colour the hosted fallback when the theme changes.
+    // Re-colour the hosted fallback when the theme changes; the grid below
+    // takes over if it loads, and then this observer has nothing left to do.
+    let chartObserver = null;
     if (window.MutationObserver) {
-      const observer = new MutationObserver(updateActivityChart);
-      observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+      chartObserver = new MutationObserver(updateActivityChart);
+      chartObserver.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
     }
 
     if (!window.fetch) return;
@@ -839,7 +854,9 @@
         card.insertBefore(buildActivityMonths(days, leadingPad), img);
         card.insertBefore(grid, img);
         card.insertBefore(buildActivityLegend(), img.nextSibling);
+        activityGridReady = true;
         img.hidden = true;   // the hosted image was only ever the fallback
+        if (chartObserver) chartObserver.disconnect();
         const fallback = activityFallback();
         if (fallback) fallback.hidden = true;
       })
