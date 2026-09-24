@@ -2,9 +2,9 @@
 // (M3 adds about, projects, skills, experience, education and the GitHub handle
 // for the activity chart.)
 window.SITE = {
-  name: 'Your Name',            // TBD
-  initials: 'YN',               // TBD
-  tagline: 'TBD one-line tagline.',
+  name: 'Brandon Wingard',
+  initials: 'BW',
+  tagline: 'Full-stack developer and data scientist, building in Rust, Python and C.',   // DRAFT
   status: 'Open to collaboration',
   city: 'Vienna, Austria',
   timeZone: 'Europe/Vienna',
@@ -70,8 +70,9 @@ window.SITE = {
   ],
   // About: 3-5 sentences. TBD - replace with the owner's own words.
   about: [
-    'TBD: a short paragraph about who you are and what you build.',
-    'TBD: a second paragraph — what you are working on or learning now.',
+    // DRAFT — written from the GitHub profile; replace with your own words.
+    'Full-stack developer and data scientist based in Vienna, with a B.S. in Computer Science from Clemson. I work across the stack, from systems code in Rust and C to data pipelines and models in Python.',
+    'TBD: what you are working on now, and what you are looking for.',
   ],
   // Hand-picked projects, in the order they appear on the page.
   // To change what Projects shows, edit this list — nothing else needs to change.
@@ -142,22 +143,43 @@ window.SITE = {
   // TBD - both entries below are placeholders; replace them with real roles.
   experience: [
     {
-      role: 'TBD job title',
-      org: 'TBD company',
-      place: 'TBD city, country',
-      start: 'TBD start',
+      role: 'Associate Equipment Data Management Engineer',
+      org: 'IAEA Department of Safeguards',
+      place: 'Vienna, Austria',
+      start: 'September 2025',
       end: 'Present',
       blurb: 'TBD: one or two sentences about what you did and what it ran on.',
-      tags: ['TBD tag', 'TBD tag'],
+      tags: ['Cybersecurity', 'Distributed Systems', 'InfraOps', 'Fullstack Development'],
     },
     {
-      role: 'TBD earlier job title',
-      org: 'TBD earlier company',
-      place: 'TBD city, country',
-      start: 'TBD start',
-      end: 'TBD end',
+      role: 'WMS Integration Specialist',
+      org: 'Supply Chain Technology LLC',
+      place: 'Greenville, SC, USA',
+      start: 'September 2024',
+      end: 'August 2025',
       blurb: 'TBD: one or two sentences about the earlier role.',
-      tags: ['TBD tag'],
+      tags: ['Fullstack Development', 'ML/AI'],
+    },
+    {
+      // Several titles at one employer: list them newest first and the page
+      // shows the whole stay, with each title and its own dates beneath.
+      org: 'FastFetch Corporation',
+      place: 'Seneca, SC, USA',
+      roles: [
+        { role: 'Lead Software Engineer', start: 'June 2023', end: 'August 2024' },   // TBD: confirm the promotion month
+        { role: 'Software Engineer', start: 'June 2022', end: 'June 2023' },
+      ],
+      blurb: 'TBD: one or two sentences about the work, and what changed when you took the lead.',
+      tags: ['Fullstack Development', 'Web Development', 'Project Management', 'Client Engagement', 'ML/AI'],
+    },
+    {
+      role: 'Research Assistant',
+      org: 'Clemson University',
+      place: 'Clemson, SC, USA',
+      start: 'January 2020',
+      end: 'May 2022',
+      blurb: 'TBD: one or two sentences about the earlier role.',
+      tags: ['HPC', 'ML/CV','mUAV'],
     },
   ],
   // Education, newest first. Same shape as experience, minus tags.
@@ -170,20 +192,12 @@ window.SITE = {
   // TBD - both entries below are placeholders; replace them with real studies.
   education: [
     {
-      degree: 'TBD degree',
-      org: 'TBD school',
-      place: 'TBD city, country',
-      start: 'TBD start',
-      end: 'TBD end',
-      blurb: 'TBD: focus, thesis or anything worth naming.',
-    },
-    {
-      degree: 'TBD earlier degree',
-      org: 'TBD earlier school',
-      place: 'TBD city, country',
-      start: 'TBD start',
-      end: 'TBD end',
-      blurb: 'TBD: focus, thesis or anything worth naming.',
+      degree: 'B.S. Computer Science',
+      org: 'Clemson University',
+      place: 'Clemson, SC, USA',
+      start: '2018',
+      end: '2022',
+      blurb: 'TBD: focus, concentration or anything worth naming.',
     },
   ],
   // GitHub contribution chart (Activity section).

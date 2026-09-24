@@ -2,3 +2,6 @@
 *.swp
 .vscode/
 .idea/
+
+# Stray screenshots dropped in the project folder
+Screenshot*.png

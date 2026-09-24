@@ -625,11 +625,50 @@
     return start || end;
   }
 
+  // An entry may carry several titles held at the same place (a promotion).
+  // Then the employer heads the entry and each title is listed under it, so
+  // the dates show the progression instead of flattening it to the last one.
+  function timelineRoles(entry) {
+    const roles = Array.isArray(entry.roles) ? entry.roles : [];
+    return roles.filter(function (r) {
+      return r && typeof r.role === 'string' && r.role.trim();
+    });
+  }
+
+  function buildRoleList(roles) {
+    const list = document.createElement('ol');
+    list.className = 'timeline-roles';
+    roles.forEach(function (role) {
+      const li = document.createElement('li');
+      const name = document.createElement('span');
+      name.className = 'timeline-subrole';
+      name.textContent = role.role.trim();
+      li.appendChild(name);
+      const dates = timelineDates(role);
+      if (dates) {
+        const when = document.createElement('span');
+        when.className = 'timeline-subdates';
+        when.textContent = dates;
+        li.appendChild(when);
+      }
+      if (typeof role.blurb === 'string' && role.blurb.trim()) {
+        const blurb = document.createElement('p');
+        blurb.className = 'timeline-blurb';
+        blurb.textContent = role.blurb.trim();
+        li.appendChild(blurb);
+      }
+      list.appendChild(li);
+    });
+    return list;
+  }
+
   function buildTimelineItem(entry, titleKey) {
     if (!entry || typeof entry !== 'object') return null;
-    const title = typeof entry[titleKey] === 'string' ? entry[titleKey].trim() : '';
-    if (!title) return null; // no role/degree: nothing to head the entry with
+    const roles = timelineRoles(entry);
     const org = typeof entry.org === 'string' ? entry.org.trim() : '';
+    const title = typeof entry[titleKey] === 'string' ? entry[titleKey].trim() : '';
+    // With a roles list the employer is the heading; otherwise it is the role.
+    if (!title && !(roles.length && org)) return null;
     const place = typeof entry.place === 'string' ? entry.place.trim() : '';
 
     const item = document.createElement('li');
@@ -638,16 +677,23 @@
     // The rail and the dot are drawn in CSS, so nothing decorative lands here.
     const heading = document.createElement('h4');
     heading.className = 'timeline-role';
-    heading.textContent = org ? title + ' · ' + org : title;
+    if (roles.length) heading.textContent = org;
+    else heading.textContent = org ? title + ' · ' + org : title;
     item.appendChild(heading);
 
-    const parts = [timelineDates(entry), place].filter(Boolean);
+    // Span the whole stay: the earliest start (last listed) to the latest end.
+    const span = roles.length
+      ? timelineDates({ start: roles[roles.length - 1].start, end: roles[0].end })
+      : timelineDates(entry);
+    const parts = [span, place].filter(Boolean);
     if (parts.length) {
       const meta = document.createElement('p');
       meta.className = 'timeline-meta';
       meta.textContent = parts.join(' · ');
       item.appendChild(meta);
     }
+
+    if (roles.length) item.appendChild(buildRoleList(roles));
 
     if (typeof entry.blurb === 'string' && entry.blurb.trim()) {
       const blurb = document.createElement('p');
