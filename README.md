@@ -69,6 +69,11 @@ The site is served at `https://aegisssc.github.io`.
 
 ## Launch checklist
 
+**0. Hero photo (optional).** Drop a square image at `images/avatar.jpg`
+(400-800px, JPG/PNG/WebP) and set `avatar: 'images/avatar.jpg'` in
+`js/content.js`. Leave it empty to show the initials instead; a bad path
+falls back to them too.
+
 **1. Fill in the placeholders.** Search for `TBD` in `js/content.js` (name,
 initials, tagline, about, email, LinkedIn) and in the `<head>` of `index.html`
 (title, description, `og:*` and `twitter:*` tags — the name appears there as

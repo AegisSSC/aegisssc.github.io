@@ -190,6 +190,29 @@
         (names.length ? ', linked to ' + names.length + ' other locations' : ''));
     }
 
+    // Hero photo: replaces the initials, and falls back to them if it 404s.
+    const avatar = document.querySelector('.avatar');
+    const photo = siteString('avatar');
+    if (avatar && photo) {
+      const initials = avatar.textContent;
+      const img = document.createElement('img');
+      img.className = 'avatar-photo';
+      img.src = photo;
+      img.alt = name ? 'Photo of ' + name : '';
+      img.decoding = 'async';
+      img.addEventListener('error', function () {
+        // Bad path or missing file: put the initials back rather than an empty circle.
+        img.remove();
+        avatar.classList.remove('has-photo');
+        avatar.setAttribute('aria-hidden', 'true');
+        avatar.textContent = initials;
+      });
+      avatar.textContent = '';
+      avatar.removeAttribute('aria-hidden');
+      avatar.classList.add('has-photo');
+      avatar.appendChild(img);
+    }
+
     const fallback = document.querySelector('#globeWrap .globe-fallback');
     if (fallback && site() && site().location) {
       const loc = siteLocation();
