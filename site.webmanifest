@@ -1,7 +1,7 @@
 {
-  "name": "Your Name — Portfolio",
-  "short_name": "Your Name",
-  "description": "TBD one-line tagline.",
+  "name": "Brandon Wingard — Portfolio",
+  "short_name": "Brandon Wingard",
+  "description": "Full-stack developer and data scientist, building in Rust, Python and C.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

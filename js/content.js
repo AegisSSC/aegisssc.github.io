@@ -4,7 +4,7 @@
 window.SITE = {
   name: 'Brandon Wingard',
   initials: 'BW',
-  tagline: 'Full-stack developer and data scientist, building in Rust, Python and C.',   // DRAFT
+  tagline: 'Full-stack developer and data scientist, building in Rust, Python and C.',
   status: 'Open to collaboration',
   city: 'Vienna, Austria',
   timeZone: 'Europe/Vienna',
@@ -15,36 +15,46 @@ window.SITE = {
   //        omit for a plain accent dot.
   // size: optional node size multiplier (1 = normal).
   anchors: [
-    { name: 'Hyderabad, India', location: [17.385, 78.4867] },
-    { name: 'Tokyo, Japan', location: [35.6762, 139.6503] },
+    // Original Base of Operations Vienna will go here if I move
     { name: 'Greenville, SC, USA', location: [34.8526, -82.394], style: 'highlight' },
-    { name: 'Augusta, GA, USA', location: [33.4735, -82.0105] },
-    { name: 'Huntington Beach, CA, USA', location: [33.6603, -117.9992] },
-    { name: 'Toronto, Canada', location: [43.6532, -79.3832] },
+
+    // IAEA Project Locations
+    { name: 'Tokyo, Japan', location: [35.6762, 139.6503] },                // TOK
+    { name: 'Toronto, Canada', location: [43.6532, -79.3832] },             // TOR
+    { name: 'Luxembourg', location: [49.6116, 6.1319] },                    // EURATOM
+    { name: 'Rio de Janeiro, Brazil', location: [-22.9068, -43.1729] },     // ABACC
+
+    { name: 'Mol, Belgium', location: [51.1906, 5.115] },                   // RECUMO
+    { name: 'Cape Town, South Africa', location: [-33.9249, 18.4241] },     // AZBDT NPP
+    { name: 'Aomori, Japan', location: [40.8222, 140.7474] },               // JMOX NPP
+    { name: 'CERN, Switzerland', location: [46.233, 6.0557] },              // CHZ NPP
+    { name: 'Paks, Hungary', location: [46.6225, 18.8558] },                // Paks NPP
+    { name: 'Taipei, Taiwan', location: [25.033, 121.5654] },               // Taiwan NPP
+    { name: 'Chippawa Hill, ON, Canada', location: [44.5124, -81.3297] },   // Bruce NPP
+
+    // Supply Chain Technology Project Management
+    { name: 'Hyderabad, India', location: [17.385, 78.4867] },              // Supply Chain Technology India Campus
+    // Supply Chain Technology Project Locations
+    { name: 'Huntington Beach, CA, USA', location: [33.6603, -117.9992] },  // Hybrid Apparel
+    { name: 'San Bernardino, CA, USA', location: [34.1083, -117.2898] },    // Hybrid Apparel
+    { name: 'Orlando, FL, USA', location: [28.5383, -81.3792] },            // 
+ 
+    // FastFetch by ABCO Location
     { name: 'East Rutherford, NJ, USA', location: [40.8339, -74.0971] },
-    { name: 'Crystal Lake, IL, USA', location: [42.2411, -88.3162] },
-    { name: 'Luxembourg', location: [49.6116, 6.1319] },
-    { name: 'Mol, Belgium', location: [51.1906, 5.115] },
-    { name: 'Rio de Janeiro, Brazil', location: [-22.9068, -43.1729] },
-    { name: 'Cape Town, South Africa', location: [-33.9249, 18.4241] },
-    { name: 'Aomori, Japan', location: [40.8222, 140.7474] },
-    { name: 'CERN, Switzerland', location: [46.233, 6.0557] },
-    { name: 'Paks, Hungary', location: [46.6225, 18.8558] },
-    { name: 'Taipei, Taiwan', location: [25.033, 121.5654] },
-    { name: 'Chippawa Hill, ON, Canada', location: [44.5124, -81.3297] },
-    // Project locations
-    { name: 'Mebane, NC, USA', location: [36.096, -79.267] },
-    { name: 'Charlotte, NC, USA', location: [35.2271, -80.8431] },
-    { name: 'Harrisburg, NC, USA', location: [35.3238, -80.6498] },
-    { name: 'Orlando, FL, USA', location: [28.5383, -81.3792] },
-    { name: 'Arlington, TX, USA', location: [32.7357, -97.1081] },
-    { name: 'San Bernardino, CA, USA', location: [34.1083, -117.2898] },
-    { name: 'Chanhassen, MN, USA', location: [44.8622, -93.5307] },
+    // FastFetch Corp Project Locations
+    { name: 'Augusta, GA, USA', location: [33.4735, -82.0105] },      // Seeds 'n' Such
+    { name: 'Crystal Lake, IL, USA', location: [42.2411, -88.3162] }, // Snap-on Tools
+    { name: 'Mebane, NC, USA', location: [36.096, -79.267] },         // Sports Endeavours
+    { name: 'Charlotte, NC, USA', location: [35.2271, -80.8431] },    // 
+    { name: 'Harrisburg, NC, USA', location: [35.3238, -80.6498] },   // Saddle Creek Logistics
+    { name: 'Arlington, TX, USA', location: [32.7357, -97.1081] },    // Staci Americas/AMWare
+    { name: 'Chanhassen, MN, USA', location: [44.8622, -93.5307] },   // Waytek Wire
+ 
   ],
   links: {
-    github: 'https://github.com/aegisssc',
-    linkedin: '',               // TBD — empty string = hidden
-    email: '',                  // TBD — empty string = hidden
+    github:   'https://github.com/aegisssc',
+    linkedin: 'https://www.linkedin.com/in/brandon-wingard-4886b7148/',   // empty string = hidden
+    email:    'wingardbrandonm@gmail.com',                                // empty string = hidden
   },
   // Tools carousel. Each icon is the OFFICIAL brand-coloured mark served by
   // https://cdn.simpleicons.org/<slug>; adding /<hex> after the slug recolours it.
@@ -57,22 +67,21 @@ window.SITE = {
   // near-black mark on the dark theme is the one real case).
   // js/main.js swaps the URLs whenever <html data-theme> changes.
   tools: [
-    { name: 'Git', slug: 'git' },                        // #F03C2E
-    { name: 'GitHub', slug: 'github', dark: 'ECEFF4' },  // #181717 is invisible on the dark bg
-    { name: 'Linux', slug: 'linux' },                    // #FCC624
-    { name: 'Python', slug: 'python' },                  // #3776AB
-    { name: 'JavaScript', slug: 'javascript' },          // #F7DF1E
-    { name: 'HTML5', slug: 'html5' },                    // #E34F26
-    { name: 'CSS', slug: 'css' },                        // #663399
-    { name: 'Docker', slug: 'docker' },                  // #2496ED
-    { name: 'VS Code', slug: 'vscodium' },               // #2F80ED
-    { name: 'Bash', slug: 'gnubash' },                   // #4EAA25
+    { name: 'Git',        slug: 'git' },                     // #F03C2E
+    { name: 'GitHub',     slug: 'github', dark: 'ECEFF4' },  // #181717 is invisible on the dark bg
+    { name: 'Linux',      slug: 'linux' },                   // #FCC624
+    { name: 'Python',     slug: 'python' },                  // #3776AB
+    { name: 'JavaScript', slug: 'javascript' },              // #F7DF1E
+    { name: 'HTML5',      slug: 'html5' },                   // #E34F26
+    { name: 'CSS',        slug: 'css' },                     // #663399
+    { name: 'Docker',     slug: 'docker' },                  // #2496ED
+    { name: 'VS Code',    slug: 'vscodium' },                // #2F80ED
+    { name: 'Bash',       slug: 'gnubash' },                 // #4EAA25
   ],
-  // About: 3-5 sentences. TBD - replace with the owner's own words.
+  // About: the paragraphs under the About heading.
   about: [
-    // DRAFT — written from the GitHub profile; replace with your own words.
     'Full-stack developer and data scientist based in Vienna, with a B.S. in Computer Science from Clemson. I work across the stack, from systems code in Rust and C to data pipelines and models in Python.',
-    'TBD: what you are working on now, and what you are looking for.',
+    'I am currently working on data security and distributed systems.',
   ],
   // Hand-picked projects, in the order they appear on the page.
   // To change what Projects shows, edit this list — nothing else needs to change.
@@ -84,7 +93,7 @@ window.SITE = {
   projects: [
     {
       name: 'city-gen-rs',
-      blurb: 'TBD: a procedural city generator in Rust.',
+      blurb: 'A procedural city generator in Rust.',
       url: 'https://github.com/AegisSSC/city-gen-rs',
       tags: ['Rust', 'Procedural generation'],
     },
@@ -125,12 +134,12 @@ window.SITE = {
       tags: ['Python', 'Pandas', 'Analysis'],
     },
   ],
-  // Skill groups. TBD - drafted from the repos above; the owner should correct these.
+  // Skill groups shown under Skills.
   skills: [
-    { group: 'Languages', items: ['Rust', 'Python', 'C', 'TypeScript', 'JavaScript', 'Lua'] },
-    { group: 'Web', items: ['SvelteKit', 'HTML', 'CSS', 'Markdown'] },
-    { group: 'Data', items: ['Pandas', 'Linfa', 'Jupyter'] },
-    { group: 'Systems & tools', items: ['Linux', 'Git', 'Neovim', 'OpenGL'] },
+    { group: 'Languages', items: ['Rust', 'Python', 'C', 'C++', 'R','TypeScript', 'JavaScript', 'Lua'] },
+    { group: 'Web', items: ['SvelteKit', 'React', 'HTML', 'CSS', 'Markdown'] },
+    { group: 'Data', items: ['Pandas', 'Numpy', 'Scikit', 'Linfa', 'Jupyter'] },
+    { group: 'Systems & tools', items: ['Linux', 'Git', 'Neovim', 'OpenGL', 'Terraform'] },
   ],
   // Experience, newest first - the order here is the order on the page.
   //   role  (required) job title; an entry without one is skipped
@@ -140,7 +149,6 @@ window.SITE = {
   //   end   (required) same format, or 'Present' for a current role
   //   blurb (optional) one or two sentences about the work
   //   tags  (optional) small pills, e.g. ['Rust', 'Embedded']
-  // TBD - both entries below are placeholders; replace them with real roles.
   experience: [
     {
       role: 'Associate Equipment Data Management Engineer',
@@ -148,7 +156,7 @@ window.SITE = {
       place: 'Vienna, Austria',
       start: 'September 2025',
       end: 'Present',
-      blurb: 'TBD: one or two sentences about what you did and what it ran on.',
+      blurb: 'Primary Network and Data Management lead for JMOX. Lead developer on Distributed Network SoH monitoring.',
       tags: ['Cybersecurity', 'Distributed Systems', 'InfraOps', 'Fullstack Development'],
     },
     {
@@ -157,7 +165,7 @@ window.SITE = {
       place: 'Greenville, SC, USA',
       start: 'September 2024',
       end: 'August 2025',
-      blurb: 'TBD: one or two sentences about the earlier role.',
+      blurb: 'Worked as a Scrum Master for a multinational team providing features to clients across the world. Lead the Experimental AI efforts to explore optimizations in supplychain workflows',
       tags: ['Fullstack Development', 'ML/AI'],
     },
     {
@@ -166,10 +174,10 @@ window.SITE = {
       org: 'FastFetch Corporation',
       place: 'Seneca, SC, USA',
       roles: [
-        { role: 'Lead Software Engineer', start: 'June 2023', end: 'August 2024' },   // TBD: confirm the promotion month
-        { role: 'Software Engineer', start: 'June 2022', end: 'June 2023' },
+        { role: 'Lead Software Engineer', start: 'May 2023', end: 'August 2024' }, 
+        { role: 'Software Engineer', start: 'June 2022', end: 'May 2023' },
       ],
-      blurb: 'TBD: one or two sentences about the work, and what changed when you took the lead.',
+      blurb: 'Served as Primary Client-Facing Project Manager and as a new product software lead.',
       tags: ['Fullstack Development', 'Web Development', 'Project Management', 'Client Engagement', 'ML/AI'],
     },
     {
@@ -178,7 +186,7 @@ window.SITE = {
       place: 'Clemson, SC, USA',
       start: 'January 2020',
       end: 'May 2022',
-      blurb: 'TBD: one or two sentences about the earlier role.',
+      blurb: 'Focused primarily on Computer Vision Guided Micro-Arial Vehicles. Also conducted research on both Lossless and Lossy Data Compression.',
       tags: ['HPC', 'ML/CV','mUAV'],
     },
   ],
@@ -189,7 +197,6 @@ window.SITE = {
   //   start  (required) free text, e.g. '2019'
   //   end    (required) same format, or 'Present' while still studying
   //   blurb  (optional) one or two sentences - focus, thesis, honours
-  // TBD - both entries below are placeholders; replace them with real studies.
   education: [
     {
       degree: 'B.S. Computer Science',
@@ -197,7 +204,6 @@ window.SITE = {
       place: 'Clemson, SC, USA',
       start: '2018',
       end: '2022',
-      blurb: 'TBD: focus, concentration or anything worth naming.',
     },
   ],
   // GitHub contribution chart (Activity section).
