@@ -6,7 +6,7 @@ window.SITE = {
   initials: 'BW',
   // Hero photo. Leave empty to show the initials instead. Square image,
   // 400-800px; it is displayed as a 96px circle (192px on a retina screen).
-  avatar: '',                   // e.g. 'images/avatar.jpg'
+  avatar: 'images/avatar.jpg',
   tagline: 'Full-stack developer and data scientist, building in Rust, Python and C.',
   status: 'Open to collaboration',
   city: 'Vienna, Austria',
